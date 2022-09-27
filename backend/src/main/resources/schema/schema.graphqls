@@ -1,0 +1,21 @@
+type Account {
+    id: String
+    name: String
+    email: String
+    posts: [Post]
+}
+
+type Post {
+    id: String
+    providers: [Provider]
+    caption: String
+    phrase: String
+    tags: String
+    scheduled_date: String
+}
+
+enum Provider {
+    INSTAGRAM
+    FACEBOOK
+    TWITTER
+}
