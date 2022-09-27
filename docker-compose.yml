@@ -1,0 +1,38 @@
+version: '3'
+services:
+
+  scheduler-postgres:
+    image: "postgres:9.6-alpine"
+    container_name: scheduler-postgres
+    volumes:
+      - scheduler-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=schedulerdb
+      - POSTGRES_USER=scheduler
+      - POSTGRES_PASSWORD=scheduler
+
+  scheduler-service:
+    build: ./scheduler-service
+    container_name: scheduler-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://scheduler-postgres:5432/schedulerdb
+      - SPRING_DATASOURCE_USERNAME=scheduler
+      - SPRING_DATASOURCE_PASSWORD=scheduler
+    ports:
+      - 8080:8080
+    links:
+      - scheduler-postgres
+
+  scheduler-ui:
+    build: ./scheduler-ui
+    container_name: scheduler-ui
+    ports:
+      - 3000:3000
+    links:
+      - scheduler-service
+
+
+volumes:
+  scheduler-data:
