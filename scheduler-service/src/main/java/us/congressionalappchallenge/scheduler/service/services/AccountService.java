@@ -7,6 +7,7 @@ import us.congressionalappchallenge.scheduler.service.graphql.types.RegisterAcco
 import us.congressionalappchallenge.scheduler.service.persistence.entities.AccountEntity;
 import us.congressionalappchallenge.scheduler.service.persistence.repositories.AccountRepository;
 
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @Component
@@ -25,6 +26,10 @@ public class AccountService {
   }
 
   public Account getAccount(UUID id) {
-    return modelMapper.map(accountRepository.findById(id), Account.class);
+    AccountEntity entity =
+        accountRepository
+            .findById(id)
+            .orElseThrow(() -> new NoSuchElementException("Account not found for ID: " + id));
+    return modelMapper.map(entity, Account.class);
   }
 }
