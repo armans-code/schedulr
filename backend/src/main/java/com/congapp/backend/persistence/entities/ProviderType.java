@@ -1,4 +1,4 @@
-package com.congapp.backend.entities;
+package com.congapp.backend.persistence.entities;
 
 public enum ProviderType {
     INSTAGRAM,

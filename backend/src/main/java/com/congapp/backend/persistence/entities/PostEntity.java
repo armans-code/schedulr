@@ -1,20 +1,18 @@
-package com.congapp.backend.entities;
+package com.congapp.backend.persistence.entities;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
 
 @Getter
 @Setter
 @Entity
+@Table(name = "post")
 public class PostEntity extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "account_id", nullable = false)
-    private UUID account_id;
+    private AccountEntity account;
 
     @Column(name = "caption")
     private String caption;
@@ -26,6 +24,7 @@ public class PostEntity extends BaseEntity {
     @Column(name = "phrase")
     private String phrase;
 
-    @Column(name = "tags")
-    private Set<String> tags = new HashSet<>();
+//    @Column(name = "tags")
+//    private List<String> tags = new List<String>() {
+//    };
 }

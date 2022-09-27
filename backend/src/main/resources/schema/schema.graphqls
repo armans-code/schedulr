@@ -1,3 +1,13 @@
+type Query {
+    getAccounts: [Account]
+}
+
+type Mutation {
+    registerAccount(registerInput: RegisterAccountInput): Account
+}
+
+# entity types
+
 type Account {
     id: String
     name: String
@@ -18,4 +28,11 @@ enum Provider {
     INSTAGRAM
     FACEBOOK
     TWITTER
+}
+
+#input types
+
+input RegisterAccountInput {
+    name: String
+    email: String
 }
