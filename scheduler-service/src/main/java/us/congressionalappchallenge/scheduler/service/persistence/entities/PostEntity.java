@@ -15,7 +15,7 @@ public class PostEntity extends BaseEntity {
   private BusinessEntity business;
 
   @Column(name = "provider")
-  private Provider provider;
+  private ProviderType provider;
 
   @Column(name = "external_id")
   private String externalId;

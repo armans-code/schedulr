@@ -2,6 +2,7 @@ package us.congressionalappchallenge.scheduler.service.fetcher;
 
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsMutation;
+import com.netflix.graphql.dgs.DgsQuery;
 import com.netflix.graphql.dgs.InputArgument;
 import us.congressionalappchallenge.scheduler.service.graphql.types.Business;
 import us.congressionalappchallenge.scheduler.service.graphql.types.RegisterBusinessInput;
@@ -19,5 +20,10 @@ public class BusinessDataFetcher {
   @DgsMutation
   public Business registerBusiness(@InputArgument RegisterBusinessInput registerBusinessInput) {
     return businessService.registerBusiness(registerBusinessInput);
+  }
+
+  @DgsQuery
+  public Business getBusinessByAuthId(@InputArgument String authId) {
+    return businessService.getBusinessByAuthId(authId);
   }
 }

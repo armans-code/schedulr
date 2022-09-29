@@ -1,3 +1,7 @@
+type Query {
+    getBusinessByAuthId(authId: String): Business
+}
+
 type Mutation {
     registerBusiness(registerBusinessInput: RegisterBusinessInput!): Business
 
@@ -12,6 +16,7 @@ type Business {
     id: String
     name: String
     email: String
+    authId: String
 }
 
 type Post {
@@ -38,9 +43,10 @@ enum ProviderName {
 #input types
 
 input RegisterBusinessInput {
+    authId: String
     name: String
     email: String
-    authId: String
+    password: String
 }
 
 input Provider {
