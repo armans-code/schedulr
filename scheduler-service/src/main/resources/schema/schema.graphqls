@@ -1,38 +1,62 @@
-type Query {
-    getAccount(id: ID!): Account
-}
-
 type Mutation {
-    registerAccount(registerInput: RegisterAccountInput!): Account
+    registerBusiness(registerBusinessInput: RegisterBusinessInput!): Business
+
+    createPost(createPostInput: CreatePostInput!): [Post]
+
+    integrateFacebook(integrateFacebookInput: IntegrateFacebookInput!): [FacebookPage]
 }
 
 # entity types
 
-type Account {
+type Business {
     id: String
     name: String
     email: String
-    posts: [Post]
 }
 
 type Post {
-    id: String
-    providers: [Provider]
-    caption: String
-    phrase: String
+    business: Business
+    page: FacebookPage
+    provider: ProviderName
+    externalId: String
+    message: String
     tags: String
-    scheduled_date: String
+    picture: String
 }
 
-enum Provider {
-    INSTAGRAM
+type FacebookPage {
+    id: ID
+    externalId: String
+    name: String
+}
+
+enum ProviderName {
     FACEBOOK
     TWITTER
 }
 
 #input types
 
-input RegisterAccountInput {
+input RegisterBusinessInput {
     name: String
     email: String
+    authId: String
+}
+
+input Provider {
+    id: ID
+    name: ProviderName
+}
+
+input CreatePostInput {
+    message: String
+    tags: String
+    picture: String
+    scheduledPublishTime: String
+    providers: [Provider]
+}
+
+input IntegrateFacebookInput {
+    code: String
+    businessId: ID
 }

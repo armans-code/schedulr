@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://scheduler-postgres:5432/schedulerdb
+    url: jdbc:postgresql://localhost:5432/schedulerdb
     username: scheduler
     password: scheduler
   jpa:
@@ -11,3 +11,14 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQL81Dialect
+
+twitter:
+  consumer-key: your-consumer-key-here
+  consumer-secret: your-consumer-secret-here
+  access-token: your-access-token-here
+  access-token-secret: your-access-token-secret-here
+
+facebook:
+  app-id: your-app-id
+  app-secret: your-app-secret
+  permissions: pages_manage_posts,pages_show_list

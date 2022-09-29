@@ -10,8 +10,8 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Entity
-@Table(name = "account")
-public class AccountEntity extends BaseEntity {
+@Table(name = "business")
+public class BusinessEntity extends BaseEntity {
   @Column(name = "auth_id")
   private String authId;
 
