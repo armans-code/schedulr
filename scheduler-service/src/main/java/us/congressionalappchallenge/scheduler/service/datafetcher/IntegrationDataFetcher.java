@@ -1,9 +1,9 @@
-package us.congressionalappchallenge.scheduler.service.fetcher;
+package us.congressionalappchallenge.scheduler.service.datafetcher;
 
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsMutation;
 import com.netflix.graphql.dgs.InputArgument;
-import us.congressionalappchallenge.scheduler.service.graphql.types.FacebookPage;
+import us.congressionalappchallenge.scheduler.service.graphql.types.FacebookAccount;
 import us.congressionalappchallenge.scheduler.service.graphql.types.IntegrateFacebookInput;
 import us.congressionalappchallenge.scheduler.service.service.IntegrationService;
 
@@ -18,7 +18,7 @@ public class IntegrationDataFetcher {
   }
 
   @DgsMutation
-  public List<FacebookPage> integrateFacebook(
+  public List<FacebookAccount> integrateFacebook(
       @InputArgument IntegrateFacebookInput integrateFacebookInput) {
     return integrationService.integrateFacebook(integrateFacebookInput);
   }

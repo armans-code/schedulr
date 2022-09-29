@@ -5,9 +5,9 @@ type Query {
 type Mutation {
     registerBusiness(registerBusinessInput: RegisterBusinessInput!): Business
 
-    createPost(createPostInput: CreatePostInput!): [Post]
+    createPost(createPostInput: CreatePostInput!): Post
 
-    integrateFacebook(integrateFacebookInput: IntegrateFacebookInput!): [FacebookPage]
+    integrateFacebook(integrateFacebookInput: IntegrateFacebookInput!): [FacebookAccount]
 }
 
 # entity types
@@ -21,23 +21,24 @@ type Business {
 
 type Post {
     business: Business
-    page: FacebookPage
-    provider: ProviderName
-    externalId: String
-    message: String
-    tags: String
-    picture: String
+    facebook: FacebookPost
 }
 
-type FacebookPage {
+type FacebookPost {
     id: ID
-    externalId: String
-    name: String
+    facebookAccount: FacebookAccount
+    facebookId: String
+    message: String
+    link: String
+    place: String
+    tags: String
+    scheduledPublishTime: String
 }
 
-enum ProviderName {
-    FACEBOOK
-    TWITTER
+type FacebookAccount {
+    id: ID
+    facebookId: String
+    name: String
 }
 
 #input types
@@ -49,17 +50,18 @@ input RegisterBusinessInput {
     password: String
 }
 
-input Provider {
-    id: ID
-    name: ProviderName
+input CreatePostInput {
+    businessId: ID
+    facebook: FacebookPostInput
 }
 
-input CreatePostInput {
+input FacebookPostInput {
+    facebookAccountId: ID
     message: String
+    link: String
+    place: String
     tags: String
-    picture: String
     scheduledPublishTime: String
-    providers: [Provider]
 }
 
 input IntegrateFacebookInput {

@@ -12,13 +12,17 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQL81Dialect
 
+# DO NOT COMMIT CREDENTIALS, USE ONLY LOCALLY
+
 twitter:
   consumer-key: your-consumer-key-here
   consumer-secret: your-consumer-secret-here
-  access-token: your-access-token-here
-  access-token-secret: your-access-token-secret-here
 
 facebook:
   app-id: your-app-id
   app-secret: your-app-secret
-  permissions: pages_manage_posts,pages_show_list
+  permissions: pages_manage_posts,pages_show_list,pages_read_engagement
+
+firebase:
+  project-id: your-project-id
+  config-path: src/main/resources/credentials/serviceAccountKey.json

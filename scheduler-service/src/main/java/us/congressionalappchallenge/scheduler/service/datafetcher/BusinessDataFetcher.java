@@ -1,4 +1,4 @@
-package us.congressionalappchallenge.scheduler.service.fetcher;
+package us.congressionalappchallenge.scheduler.service.datafetcher;
 
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsMutation;
