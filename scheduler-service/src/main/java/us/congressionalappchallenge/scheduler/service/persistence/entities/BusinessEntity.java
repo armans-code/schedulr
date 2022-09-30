@@ -12,9 +12,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "business")
 public class BusinessEntity extends BaseEntity {
-  @Column(name = "auth_id")
-  private String authId;
-
   @Column(name = "name")
   private String name;
 

@@ -1,13 +1,14 @@
 type Query {
-    getBusinessByAuthId(authId: String): Business
+    business: Business
+    facebookAuthUrl: String
+    twitterAuthUrl: String
 }
 
 type Mutation {
     registerBusiness(registerBusinessInput: RegisterBusinessInput!): Business
-
-    createPost(createPostInput: CreatePostInput!): Post
-
-    integrateFacebook(integrateFacebookInput: IntegrateFacebookInput!): [FacebookAccount]
+    createSocialPost(createSocialPostInput: CreateSocialPostInput!): Post
+    authorizeFacebook(authorizeFacebookInput: AuthorizeFacebookInput!): [FacebookAccount]
+    authorizeTwitter(authorizeTwitterInput: AuthorizeTwitterInput!): TwitterAccount
 }
 
 # entity types
@@ -16,7 +17,6 @@ type Business {
     id: String
     name: String
     email: String
-    authId: String
 }
 
 type Post {
@@ -41,17 +41,21 @@ type FacebookAccount {
     name: String
 }
 
+type TwitterAccount {
+    id: ID
+    twitterId: String
+    name: String
+}
+
 #input types
 
 input RegisterBusinessInput {
-    authId: String
     name: String
     email: String
     password: String
 }
 
-input CreatePostInput {
-    businessId: ID
+input CreateSocialPostInput {
     facebook: FacebookPostInput
 }
 
@@ -64,7 +68,11 @@ input FacebookPostInput {
     scheduledPublishTime: String
 }
 
-input IntegrateFacebookInput {
+input AuthorizeTwitterInput {
+    token: String
+    verifier: String
+}
+
+input AuthorizeFacebookInput {
     code: String
-    businessId: ID
 }

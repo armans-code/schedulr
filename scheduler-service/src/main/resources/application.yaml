@@ -14,6 +14,9 @@ spring:
 
 # DO NOT COMMIT CREDENTIALS, USE ONLY LOCALLY
 
+oauth:
+  callback-url: your-callback-url
+
 twitter:
   consumer-key: your-consumer-key-here
   consumer-secret: your-consumer-secret-here

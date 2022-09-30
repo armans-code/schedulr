@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @Service
 public class PostService {
-  private static Log log = LogFactory.getLog(PostService.class);
+  private static final Log log = LogFactory.getLog(PostService.class);
   private final BusinessRepository businessRepository;
   private final FacebookPostRepository facebookPostRepository;
   private final FacebookAccountRepository facebookAccountRepository;
@@ -44,9 +44,9 @@ public class PostService {
     this.modelMapper = modelMapper;
   }
 
-  public Post createPost(String authId, CreatePostInput input) {
+  public Post createSocialPost(String userId, CreateSocialPostInput input) {
     Post.Builder responseBuilder = Post.newBuilder();
-    BusinessEntity business = findOrganization(authId);
+    BusinessEntity business = findBusinessById(userId);
     responseBuilder.business(modelMapper.map(business, Business.class));
     if (!Objects.isNull(input.getFacebook())) {
       FacebookAccountEntity facebookAccount =
@@ -94,21 +94,15 @@ public class PostService {
     return facebookPostRepository.save(postEntity);
   }
 
-  private BusinessEntity findOrganization(String authId) {
+  private BusinessEntity findBusinessById(String userId) {
     return businessRepository
-        .findByAuthId(authId)
-        .orElseThrow(() -> new RuntimeException("Business Not Found for Auth Id: " + authId));
+        .findById(UUID.fromString(userId))
+        .orElseThrow(() -> new RuntimeException("Business Not Found for Id: " + userId));
   }
 
   private FacebookAccountEntity findFacebookAccount(UUID accountId, UUID businessId) {
     return facebookAccountRepository
         .findByIdAndOrganizationId(accountId, businessId)
-        .orElseThrow(
-            () ->
-                new RuntimeException(
-                    "Facebook Account Not Found for Business Id: "
-                        + businessId
-                        + " Account Id: "
-                        + accountId));
+        .orElseThrow(() -> new RuntimeException("Facebook Account Not Found for Business Id: " + businessId + " Account Id: " + accountId));
   }
 }
