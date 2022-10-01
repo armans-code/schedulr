@@ -1,12 +1,12 @@
 type Query {
-    business: Business
+    business(id: String): Business
     facebookAuthUrl: String
     twitterAuthUrl: String
 }
 
 type Mutation {
     registerBusiness(registerBusinessInput: RegisterBusinessInput!): Business
-    createSocialPost(createSocialPostInput: CreateSocialPostInput!): Post
+    createFacebookPost(createFacebookPostInput: CreateFacebookPostInput!): FacebookPost
     authorizeFacebook(authorizeFacebookInput: AuthorizeFacebookInput!): [FacebookAccount]
     authorizeTwitter(authorizeTwitterInput: AuthorizeTwitterInput!): TwitterAccount
 }
@@ -19,13 +19,9 @@ type Business {
     email: String
 }
 
-type Post {
-    business: Business
-    facebook: FacebookPost
-}
-
 type FacebookPost {
     id: ID
+    business: Business
     facebookAccount: FacebookAccount
     facebookId: String
     message: String
@@ -55,11 +51,8 @@ input RegisterBusinessInput {
     password: String
 }
 
-input CreateSocialPostInput {
-    facebook: FacebookPostInput
-}
-
-input FacebookPostInput {
+input CreateFacebookPostInput {
+    businessId: ID
     facebookAccountId: ID
     message: String
     link: String
@@ -69,10 +62,12 @@ input FacebookPostInput {
 }
 
 input AuthorizeTwitterInput {
+    businessId: ID
     token: String
     verifier: String
 }
 
 input AuthorizeFacebookInput {
+    businessId: ID
     code: String
 }

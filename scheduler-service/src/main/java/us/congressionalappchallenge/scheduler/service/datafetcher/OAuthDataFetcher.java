@@ -1,55 +1,53 @@
 package us.congressionalappchallenge.scheduler.service.datafetcher;
 
-import com.google.firebase.auth.FirebaseToken;
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsMutation;
 import com.netflix.graphql.dgs.DgsQuery;
 import com.netflix.graphql.dgs.InputArgument;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import us.congressionalappchallenge.scheduler.service.graphql.types.AuthorizeFacebookInput;
 import us.congressionalappchallenge.scheduler.service.graphql.types.AuthorizeTwitterInput;
 import us.congressionalappchallenge.scheduler.service.graphql.types.FacebookAccount;
 import us.congressionalappchallenge.scheduler.service.graphql.types.TwitterAccount;
-import us.congressionalappchallenge.scheduler.service.helper.AuthHelper;
 import us.congressionalappchallenge.scheduler.service.service.OAuthService;
 
 import java.util.List;
 
 @DgsComponent
 public class OAuthDataFetcher {
-  private final OAuthService oAuthService;
-  private final AuthHelper authHelper;
+  private static final Log log = LogFactory.getLog(OAuthDataFetcher.class);
 
-  public OAuthDataFetcher(OAuthService oAuthService, AuthHelper authHelper) {
+  private final OAuthService oAuthService;
+
+  public OAuthDataFetcher(OAuthService oAuthService) {
     this.oAuthService = oAuthService;
-    this.authHelper = authHelper;
   }
 
   @DgsQuery
-  public String facebookAuthUrl(@RequestHeader("Authorization") String token) {
-    authHelper.verifyUser(token.split("Bearer ")[1]);
+  @PreAuthorize("isAuthenticated()")
+  public String facebookAuthUrl() {
     return oAuthService.facebookAuthUrl();
   }
 
   @DgsQuery
-  public String twitterAuthUrl(@RequestHeader("Authorization") String token) {
-    authHelper.verifyUser(token.split("Bearer ")[1]);
+  @PreAuthorize("isAuthenticated()")
+  public String twitterAuthUrl() {
     return oAuthService.twitterAuthUrl();
   }
 
   @DgsMutation
+  @PreAuthorize("isAuthenticated() and #authorizeFacebookInput.getBusinessId() == authentication.principal.getUid()")
   public List<FacebookAccount> authorizeFacebook(
-      @InputArgument AuthorizeFacebookInput authorizeFacebookInput,
-      @RequestHeader("Authorization") String token) {
-    FirebaseToken user = authHelper.verifyUser(token.split("Bearer ")[1]);
-    return oAuthService.authorizeFacebook(user.getUid(), authorizeFacebookInput);
+      @InputArgument AuthorizeFacebookInput authorizeFacebookInput) {
+    return oAuthService.authorizeFacebook(authorizeFacebookInput.getBusinessId(), authorizeFacebookInput);
   }
 
   @DgsMutation
+  @PreAuthorize("isAuthenticated() and #authorizeTwitterInput.getBusinessId() == authentication.principal.getUid()")
   public TwitterAccount authorizeTwitter(
-      @InputArgument AuthorizeTwitterInput authorizeTwitterInput,
-      @RequestHeader("Authorization") String token) {
-    FirebaseToken user = authHelper.verifyUser(token.split("Bearer ")[1]);
-    return oAuthService.authorizeTwitter(user.getUid(), authorizeTwitterInput);
+      @InputArgument AuthorizeTwitterInput authorizeTwitterInput) {
+    return oAuthService.authorizeTwitter(authorizeTwitterInput.getBusinessId(), authorizeTwitterInput);
   }
 }

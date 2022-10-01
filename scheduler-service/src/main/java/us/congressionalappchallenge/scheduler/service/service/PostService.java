@@ -8,7 +8,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import us.congressionalappchallenge.scheduler.service.graphql.types.*;
+import us.congressionalappchallenge.scheduler.service.graphql.types.Business;
+import us.congressionalappchallenge.scheduler.service.graphql.types.CreateFacebookPostInput;
+import us.congressionalappchallenge.scheduler.service.graphql.types.FacebookPost;
 import us.congressionalappchallenge.scheduler.service.persistence.entities.BusinessEntity;
 import us.congressionalappchallenge.scheduler.service.persistence.entities.FacebookAccountEntity;
 import us.congressionalappchallenge.scheduler.service.persistence.entities.FacebookPostEntity;
@@ -44,24 +46,20 @@ public class PostService {
     this.modelMapper = modelMapper;
   }
 
-  public Post createSocialPost(String userId, CreateSocialPostInput input) {
-    Post.Builder responseBuilder = Post.newBuilder();
+  public FacebookPost createFacebookPost(String userId, CreateFacebookPostInput input) {
+    FacebookPost.Builder responseBuilder = FacebookPost.newBuilder();
     BusinessEntity business = findBusinessById(userId);
     responseBuilder.business(modelMapper.map(business, Business.class));
-    if (!Objects.isNull(input.getFacebook())) {
-      FacebookAccountEntity facebookAccount =
-          findFacebookAccount(
-              UUID.fromString(input.getFacebook().getFacebookAccountId()), business.getId());
-      String id = sendFacebook(input.getFacebook(), facebookAccount);
-      log.info("Facebook Created/Scheduled Post ID: " + id);
-      FacebookPostEntity savedPost =
-          saveFacebook(business, facebookAccount, id, input.getFacebook());
-      responseBuilder.facebook(modelMapper.map(savedPost, FacebookPost.class));
-    }
+    FacebookAccountEntity facebookAccount =
+        findFacebookAccount(UUID.fromString(input.getFacebookAccountId()), business.getId());
+    String id = sendFacebook(input, facebookAccount);
+    log.info("Facebook Created/Scheduled Post ID: " + id);
+    FacebookPostEntity savedPost = saveFacebook(business, facebookAccount, id, input);
+    modelMapper.map(savedPost, responseBuilder);
     return responseBuilder.build();
   }
 
-  private String sendFacebook(FacebookPostInput input, FacebookAccountEntity facebookAccount) {
+  private String sendFacebook(CreateFacebookPostInput input, FacebookAccountEntity facebookAccount) {
     try {
       PostUpdate postUpdate = new PostUpdate(input.getMessage());
       if (!Objects.isNull(input.getLink())) postUpdate.setLink(new URL(input.getLink()));
@@ -84,7 +82,7 @@ public class PostService {
       BusinessEntity business,
       FacebookAccountEntity facebookAccount,
       String id,
-      FacebookPostInput input) {
+      CreateFacebookPostInput input) {
     FacebookPostEntity postEntity = modelMapper.map(input, FacebookPostEntity.class);
     postEntity.setBusiness(business);
     postEntity.setFacebookAccount(facebookAccount);

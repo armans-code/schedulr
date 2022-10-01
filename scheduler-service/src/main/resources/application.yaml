@@ -28,4 +28,4 @@ facebook:
 
 firebase:
   project-id: your-project-id
-  config-path: src/main/resources/credentials/serviceAccountKey.json
+  config-path: your-config-path
