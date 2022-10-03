@@ -1,14 +1,14 @@
 package us.congressionalappchallenge.scheduler.service.persistence.entities;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "facebook_account")
+@Data
 public class FacebookAccountEntity extends BaseEntity {
   @ManyToOne
   @JoinColumn(name = "business_id", nullable = false)

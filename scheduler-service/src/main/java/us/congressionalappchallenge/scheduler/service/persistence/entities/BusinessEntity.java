@@ -1,16 +1,14 @@
 package us.congressionalappchallenge.scheduler.service.persistence.entities;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "business")
+@Data
 public class BusinessEntity extends BaseEntity {
   @Column(name = "name")
   private String name;

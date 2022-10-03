@@ -1,14 +1,12 @@
 package us.congressionalappchallenge.scheduler.service.persistence.entities;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.*;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "twitter_account")
+@Data
 public class TwitterAccountEntity extends BaseEntity {
   @ManyToOne
   @JoinColumn(name = "business_id", nullable = false)

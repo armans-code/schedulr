@@ -1,5 +1,6 @@
 package us.congressionalappchallenge.scheduler.service.config;
 
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -13,12 +14,9 @@ import org.springframework.security.web.authentication.preauth.RequestHeaderAuth
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@AllArgsConstructor
 public class SecurityConfig {
   private final AuthFilter authFilter;
-
-  public SecurityConfig(AuthFilter authFilter) {
-    this.authFilter = authFilter;
-  }
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

@@ -1,13 +1,20 @@
 type Query {
-    business(id: String): Business
+    business(businessId: ID!): Business
+    facebookPosts(queryFilter: QueryFilter!): [FacebookPost]
+    instagramPosts(queryFilter: QueryFilter!): [InstagramPost]
+    twitterTweets(queryFilter: QueryFilter!): [TwitterTweet]
     facebookAuthUrl: String
+    instagramAuthUrl: String
     twitterAuthUrl: String
 }
 
 type Mutation {
     registerBusiness(registerBusinessInput: RegisterBusinessInput!): Business
     createFacebookPost(createFacebookPostInput: CreateFacebookPostInput!): FacebookPost
+    createInstagramPost(createInstagramPostInput: CreateInstagramPostInput!): InstagramPost
+    createTwitterTweet(createTwitterTweetInput: CreateTwitterTweetInput!): TwitterTweet
     authorizeFacebook(authorizeFacebookInput: AuthorizeFacebookInput!): [FacebookAccount]
+    authorizeInstagram(authorizeInstagramInput: AuthorizeInstagramInput!): [InstagramAccount]
     authorizeTwitter(authorizeTwitterInput: AuthorizeTwitterInput!): TwitterAccount
 }
 
@@ -28,7 +35,30 @@ type FacebookPost {
     link: String
     place: String
     tags: String
+    published: Boolean
     scheduledPublishTime: String
+}
+
+type InstagramPost {
+    id: ID
+    business: Business
+    instagramAccount: InstagramAccount
+    instagramId: String
+    caption: String
+    imageUrl: String
+    published: Boolean
+    scheduledPublishTime: String
+}
+
+type TwitterTweet {
+    id: ID
+    business: Business
+    twitterAccount: TwitterAccount
+    twitterId: String
+    text: String
+    userId: String
+    media: [String]
+    scheduledAt: String
 }
 
 type FacebookAccount {
@@ -37,6 +67,14 @@ type FacebookAccount {
     name: String
 }
 
+type InstagramAccount {
+    id: ID
+    instagramId: String
+    facebookAccount: FacebookAccount
+    name: String
+}
+
+
 type TwitterAccount {
     id: ID
     twitterId: String
@@ -44,6 +82,12 @@ type TwitterAccount {
 }
 
 #input types
+
+input QueryFilter {
+    businessId: ID
+    since: String
+    until: String
+}
 
 input RegisterBusinessInput {
     name: String
@@ -61,13 +105,35 @@ input CreateFacebookPostInput {
     scheduledPublishTime: String
 }
 
-input AuthorizeTwitterInput {
+input CreateInstagramPostInput {
     businessId: ID
-    token: String
-    verifier: String
+    instagramAccountId: ID
+    caption: String
+    imageUrl: String
+    scheduledPublishTime: String
+}
+
+input CreateTwitterTweetInput {
+    businessId: ID
+    twitterAccountId: ID
+    text: String
+    userId: String
+    media: [String]
+    scheduledAt: String
 }
 
 input AuthorizeFacebookInput {
     businessId: ID
     code: String
+}
+
+input AuthorizeInstagramInput {
+    businessId: ID
+    code: String
+}
+
+input AuthorizeTwitterInput {
+    businessId: ID
+    token: String
+    verifier: String
 }

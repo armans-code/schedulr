@@ -1,15 +1,13 @@
 package us.congressionalappchallenge.scheduler.service.persistence.entities;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "facebook_post")
+@Data
 public class FacebookPostEntity extends BaseEntity {
   @ManyToOne
   @JoinColumn(name = "business_id", nullable = false)
@@ -22,17 +20,8 @@ public class FacebookPostEntity extends BaseEntity {
   @Column(name = "facebook_id")
   private String facebookId;
 
-  @Column(name = "name")
-  private String name;
-
   @Column(name = "message")
   private String message;
-
-  @Column(name = "description")
-  private String description;
-
-  @Column(name = "caption")
-  private String caption;
 
   @Column(name = "link")
   private String link;
@@ -40,12 +29,12 @@ public class FacebookPostEntity extends BaseEntity {
   @Column(name = "tags")
   private String tags;
 
-  @Column(name = "picture")
-  private String picture;
-
   @Column(name = "place")
   private String place;
 
-  @Column(name = "scheduled_at")
-  private Date scheduledAt;
+  @Column(name = "scheduled")
+  private Boolean scheduled;
+
+  @Column(name = "scheduled_publish_time")
+  private Date scheduledPublishTime;
 }

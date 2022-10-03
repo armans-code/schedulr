@@ -3,8 +3,7 @@ package us.congressionalappchallenge.scheduler.service.config;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
 import lombok.SneakyThrows;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Component;
@@ -16,9 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
 
 @Component
+@Slf4j
 class AuthFilter extends OncePerRequestFilter {
-  private static final Log log = LogFactory.getLog(AuthFilter.class);
-
   private final FirebaseAuth firebaseAuth;
 
   public AuthFilter(FirebaseAuth firebaseAuth) {

@@ -1,8 +1,7 @@
 package us.congressionalappchallenge.scheduler.service.config;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import twitter4jads.TwitterAds;
@@ -11,18 +10,16 @@ import twitter4jads.conf.ConfigurationBuilder;
 import twitter4jads.internal.models4j.Twitter;
 
 @Configuration
+@AllArgsConstructor
+@Slf4j
 public class TwitterConfig {
-  private static final Log log = LogFactory.getLog(TwitterConfig.class);
 
-  @Value("${twitter.consumer-key}")
-  private String consumerKey;
-
-  @Value("${twitter.consumer-secret}")
-  private String consumerSecret;
+  private final TwitterProperties twitterProperties;
 
   @Bean
   TwitterAdsFactory twitterAdsFactory() {
-    if (consumerKey == null || consumerSecret == null) {
+    if (twitterProperties.getConsumerKey() == null
+        || twitterProperties.getConsumerSecret() == null) {
       log.error(
           "Twitter properties not configured properly. Please check twitter.* properties settings in configuration file.");
       throw new RuntimeException(
@@ -31,8 +28,8 @@ public class TwitterConfig {
 
     ConfigurationBuilder cb = new ConfigurationBuilder();
     cb.setDebugEnabled(true)
-        .setOAuthConsumerKey(consumerKey)
-        .setOAuthConsumerSecret(consumerSecret);
+        .setOAuthConsumerKey(twitterProperties.getConsumerKey())
+        .setOAuthConsumerSecret(twitterProperties.getConsumerSecret());
     return new TwitterAdsFactory(cb.build());
   }
 

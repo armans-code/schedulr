@@ -11,21 +11,33 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQL81Dialect
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: always
+    properties:
+      org:
+        quartz:
+          jobStore:
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+            isClustered: true
+          scheduler:
+            instanceId: AUTO
 
 # DO NOT COMMIT CREDENTIALS, USE ONLY LOCALLY
-
-oauth:
-  callback-url: your-callback-url
 
 twitter:
   consumer-key: your-consumer-key-here
   consumer-secret: your-consumer-secret-here
+  callback-url: your-callback-url-here
 
 facebook:
-  app-id: your-app-id
-  app-secret: your-app-secret
-  permissions: pages_manage_posts,pages_show_list,pages_read_engagement
+  app-id: your-app-id-here
+  app-secret: your-app-secret-here
+  facebook-permissions: pages_manage_posts,pages_show_list
+  instagram-permissions: pages_manage_posts,pages_show_list,instagram_basic,instagram_content_publish
+  callback-url: your-callback-url-here
 
 firebase:
-  project-id: your-project-id
-  config-path: your-config-path
+  project-id: your-project-id-here
+  config-path: your-config-path-here
