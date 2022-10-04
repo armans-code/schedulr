@@ -6,27 +6,34 @@ import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
-import us.congressionalappchallenge.scheduler.service.graphql.types.CreateInstagramPostInput;
 import us.congressionalappchallenge.scheduler.service.helper.InstagramHelper;
 import us.congressionalappchallenge.scheduler.service.persistence.entities.InstagramAccountEntity;
 import us.congressionalappchallenge.scheduler.service.persistence.entities.InstagramPostEntity;
+import us.congressionalappchallenge.scheduler.service.persistence.facade.AccountFacade;
 import us.congressionalappchallenge.scheduler.service.persistence.facade.PostFacade;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Slf4j
 public class InstagramPostJob extends QuartzJobBean {
   private final InstagramHelper instagramHelper;
   private final PostFacade postFacade;
+  private final AccountFacade accountFacade;
 
   @Override
   protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
-    JobDataMap jobDataMap = context.getMergedJobDataMap();
-    CreateInstagramPostInput input =
-        (CreateInstagramPostInput) jobDataMap.get("instagram-post-input");
+    JobDataMap dataMap = context.getMergedJobDataMap();
     InstagramAccountEntity instagramAccount =
-        (InstagramAccountEntity) jobDataMap.get("instagram-account");
-    InstagramPostEntity instagramPost = (InstagramPostEntity) jobDataMap.get("instagram-post");
-    String postId = instagramHelper.sendInstagramPost(input, instagramAccount);
+        accountFacade.findInstagramAccount(
+            (UUID) dataMap.get("instagram-account-id"), (UUID) dataMap.get("business-id"));
+    InstagramPostEntity instagramPost =
+        postFacade.findInstagramPost((UUID) dataMap.get("instagram-post-id"));
+    Optional<String> imageUrlOpt = Optional.ofNullable(instagramPost.getImageUrl());
+    String postId =
+        instagramHelper.sendInstagramPost(
+            instagramPost.getCaption(), imageUrlOpt, instagramAccount);
     instagramPost.setInstagramId(postId);
     postFacade.getInstagramPostRepository().save(instagramPost);
   }

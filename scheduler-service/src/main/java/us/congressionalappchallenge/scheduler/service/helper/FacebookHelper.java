@@ -5,11 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import us.congressionalappchallenge.scheduler.service.config.FacebookProperties;
-import us.congressionalappchallenge.scheduler.service.graphql.types.CreateFacebookPostInput;
 import us.congressionalappchallenge.scheduler.service.persistence.entities.FacebookAccountEntity;
 import us.congressionalappchallenge.scheduler.service.util.DateUtil;
 
-import java.util.Objects;
+import java.util.Optional;
 
 @Component
 @AllArgsConstructor
@@ -55,7 +54,12 @@ public class FacebookHelper {
   }
 
   public String sendFacebookPost(
-      CreateFacebookPostInput input, FacebookAccountEntity facebookAccount) {
+      String message,
+      Optional<String> link,
+      Optional<String> tags,
+      Optional<String> place,
+      Optional<String> scheduledPublishTime,
+      FacebookAccountEntity facebookAccount) {
     try {
       APIContext context =
           new APIContext(
@@ -64,15 +68,15 @@ public class FacebookHelper {
               facebookProperties.getAppId());
       Page.APIRequestCreateFeed apiRequest =
           new Page.APIRequestCreateFeed(facebookAccount.getFacebookId(), context);
-      apiRequest.setMessage(input.getMessage());
-      if (!Objects.isNull(input.getLink())) apiRequest.setLink(input.getLink());
-      if (!Objects.isNull(input.getPlace())) apiRequest.setPlace(input.getPlace());
-      if (!Objects.isNull(input.getTags())) apiRequest.setTags(input.getTags());
-      if (!Objects.isNull(input.getScheduledPublishTime())) {
-        apiRequest.setScheduledPublishTime(
-            DateUtil.convert(input.getScheduledPublishTime()).toString());
-        apiRequest.setPublished(false);
-      }
+      apiRequest.setMessage(message);
+      link.ifPresent(apiRequest::setLink);
+      tags.ifPresent(apiRequest::setTags);
+      place.ifPresent(apiRequest::setPlace);
+      scheduledPublishTime.ifPresent(
+          t -> {
+            apiRequest.setScheduledPublishTime(DateUtil.convert(t).toString());
+            apiRequest.setPublished(false);
+          });
       return apiRequest.execute().getId();
     } catch (APIException e) {
       throw new RuntimeException("Facebook Error: " + e);

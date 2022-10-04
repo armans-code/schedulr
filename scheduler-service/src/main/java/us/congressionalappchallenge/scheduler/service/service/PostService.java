@@ -15,7 +15,7 @@ import us.congressionalappchallenge.scheduler.service.persistence.facade.PostFac
 import us.congressionalappchallenge.scheduler.service.util.DateUtil;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -38,27 +38,62 @@ public class PostService {
   }
 
   public FacebookPostEntity createFacebookPost(CreateFacebookPostInput input) {
-    BusinessEntity business = accountFacade.findBusinessById(UUID.fromString(input.getBusinessId()));
+    BusinessEntity business =
+        accountFacade.findBusinessById(UUID.fromString(input.getBusinessId()));
     FacebookAccountEntity facebookAccount =
         accountFacade.findFacebookAccount(
             UUID.fromString(input.getFacebookAccountId()), business.getId());
-    String postId = facebookHelper.sendFacebookPost(input, facebookAccount);
-    log.info("instagram created post id: " + postId);
-    return postFacade.saveFacebookPost(business, facebookAccount, input, postId);
+    Optional<String> linkOpt = Optional.ofNullable(input.getLink());
+    Optional<String> tagsOpt = Optional.ofNullable(input.getTags());
+    Optional<String> placeOpt = Optional.ofNullable(input.getPlace());
+    Optional<String> scheduledPublishTimeOpt = Optional.ofNullable(input.getScheduledPublishTime());
+    String postId =
+        facebookHelper.sendFacebookPost(
+            input.getMessage(),
+            linkOpt,
+            tagsOpt,
+            placeOpt,
+            scheduledPublishTimeOpt,
+            facebookAccount);
+    log.info("facebook created post id: " + postId);
+    if (scheduledPublishTimeOpt.isPresent()) {
+      return postFacade.saveFacebookPost(
+          business,
+          facebookAccount,
+          input.getMessage(),
+          linkOpt,
+          tagsOpt,
+          placeOpt,
+          DateUtil.convert(scheduledPublishTimeOpt.get()));
+    } else {
+      return postFacade.saveFacebookPost(
+          business, facebookAccount, input.getMessage(), linkOpt, tagsOpt, placeOpt, postId);
+    }
   }
 
   public InstagramPostEntity createInstagramPost(CreateInstagramPostInput input) {
-    BusinessEntity business = accountFacade.findBusinessById(UUID.fromString(input.getBusinessId()));
-    InstagramAccountEntity instagramAccount = accountFacade
-            .findInstagramAccount(UUID.fromString(input.getInstagramAccountId()), business.getId());
-    if (Objects.isNull(input.getScheduledPublishTime())) {
-      InstagramPostEntity postEntity = postFacade
-              .saveInstagramPost(business, instagramAccount, input, null, true);
-      jobService.scheduleInstagramPostJob(input, instagramAccount, postEntity);
+    BusinessEntity business =
+        accountFacade.findBusinessById(UUID.fromString(input.getBusinessId()));
+    InstagramAccountEntity instagramAccount =
+        accountFacade.findInstagramAccount(
+            UUID.fromString(input.getInstagramAccountId()), business.getId());
+    Optional<String> scheduledPublishTimeOpt = Optional.ofNullable(input.getScheduledPublishTime());
+    Optional<String> imageUrlOpt = Optional.ofNullable(input.getImageUrl());
+    if (scheduledPublishTimeOpt.isPresent()) {
+      InstagramPostEntity postEntity =
+          postFacade.saveInstagramPost(
+              business,
+              instagramAccount,
+              input.getCaption(),
+              imageUrlOpt,
+              DateUtil.convert(scheduledPublishTimeOpt.get()));
+      jobService.scheduleInstagramPostJob(instagramAccount, postEntity);
       return postEntity;
     } else {
-      String postId = instagramHelper.sendInstagramPost(input, instagramAccount);
-      return postFacade.saveInstagramPost(business, instagramAccount, input, postId, false);
+      String instagramId =
+          instagramHelper.sendInstagramPost(input.getCaption(), imageUrlOpt, instagramAccount);
+      return postFacade.saveInstagramPost(
+          business, instagramAccount, input.getCaption(), imageUrlOpt, instagramId);
     }
   }
 }

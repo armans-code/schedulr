@@ -6,14 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import us.congressionalappchallenge.scheduler.service.config.FacebookProperties;
-import us.congressionalappchallenge.scheduler.service.graphql.types.CreateInstagramPostInput;
 import us.congressionalappchallenge.scheduler.service.persistence.entities.BusinessEntity;
 import us.congressionalappchallenge.scheduler.service.persistence.entities.FacebookAccountEntity;
 import us.congressionalappchallenge.scheduler.service.persistence.entities.InstagramAccountEntity;
 import us.congressionalappchallenge.scheduler.service.persistence.facade.AccountFacade;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -59,7 +57,7 @@ public class InstagramHelper {
   }
 
   public String sendInstagramPost(
-      CreateInstagramPostInput input, InstagramAccountEntity instagramAccount) {
+      String caption, Optional<String> imageUrl, InstagramAccountEntity instagramAccount) {
     try {
       APIContext context =
           new APIContext(
@@ -68,17 +66,16 @@ public class InstagramHelper {
               facebookProperties.getAppId());
       APIRequest<IGMedia> mediaAPIRequest =
           new APIRequest<>(context, instagramAccount.getInstagramId(), "/media", "POST");
-      mediaAPIRequest.setParam("caption", input.getCaption());
-      if (!Objects.isNull(input.getImageUrl()))
-        mediaAPIRequest.setParam("image_url", input.getImageUrl());
+      mediaAPIRequest.setParam("caption", caption);
+      if (imageUrl.isPresent()) mediaAPIRequest.setParam("image_url", imageUrl);
       mediaAPIRequest.setParam(
-          "access-token", instagramAccount.getFacebookAccount().getAccessToken());
+          "access_token", instagramAccount.getFacebookAccount().getAccessToken());
       JsonObject mediaCreated = mediaAPIRequest.execute().getRawResponseAsJsonObject();
       APIRequest<IGMedia> publishRequest =
           new APIRequest<>(context, instagramAccount.getInstagramId(), "/media_publish", "POST");
-      publishRequest.setParam("creation-id", mediaCreated.get("id"));
+      publishRequest.setParam("creation_id", mediaCreated.get("id"));
       publishRequest.setParam(
-          "access-token", instagramAccount.getFacebookAccount().getAccessToken());
+          "access_token", instagramAccount.getFacebookAccount().getAccessToken());
       return publishRequest.execute().getRawResponseAsJsonObject().get("id").getAsString();
     } catch (APIException e) {
       throw new RuntimeException("Facebook Error: " + e);
