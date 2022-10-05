@@ -28,15 +28,6 @@ public class PostService {
   private final PostFacade postFacade;
   private final JobService jobService;
 
-  public List<FacebookPostEntity> getFacebookPosts(QueryFilter queryFilter) {
-    return postFacade
-        .getFacebookPostRepository()
-        .findByBusinessId(
-            UUID.fromString(queryFilter.getBusinessId()),
-            DateUtil.convert(queryFilter.getSince()),
-            DateUtil.convert(queryFilter.getUntil()));
-  }
-
   public FacebookPostEntity createFacebookPost(CreateFacebookPostInput input) {
     BusinessEntity business =
         accountFacade.findBusinessById(UUID.fromString(input.getBusinessId()));
@@ -95,5 +86,23 @@ public class PostService {
       return postFacade.saveInstagramPost(
           business, instagramAccount, input.getCaption(), imageUrlOpt, instagramId);
     }
+  }
+
+  public List<FacebookPostEntity> getFacebookPosts(QueryFilter queryFilter) {
+    return postFacade
+        .getFacebookPostRepository()
+        .findAllByBusinessIdAndSinceAndUntil(
+            UUID.fromString(queryFilter.getBusinessId()),
+            DateUtil.convert(queryFilter.getSince()),
+            DateUtil.convert(queryFilter.getUntil()));
+  }
+
+  public List<InstagramPostEntity> getInstagramPosts(QueryFilter queryFilter) {
+    return postFacade
+        .getInstagramPostRepository()
+        .findAllByBusinessIdAndSinceAndUntil(
+            UUID.fromString(queryFilter.getBusinessId()),
+            DateUtil.convert(queryFilter.getSince()),
+            DateUtil.convert(queryFilter.getUntil()));
   }
 }

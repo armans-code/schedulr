@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class OAuthService {
+public class IntegrationService {
   private final AccountFacade accountFacade;
   private final TwitterHelper twitterHelper;
   private final FacebookHelper facebookHelper;
@@ -78,5 +78,23 @@ public class OAuthService {
         accessToken,
         ((Long) accessToken.getUserId()).toString(),
         accessToken.getScreenName());
+  }
+
+  public List<FacebookAccountEntity> getFacebookAccounts(String businessId) {
+    return accountFacade
+        .getFacebookAccountRepository()
+        .findAllByBusinessId(UUID.fromString(businessId));
+  }
+
+  public List<InstagramAccountEntity> getInstagramAccounts(String businessId) {
+    return accountFacade
+        .getInstagramAccountRepository()
+        .findAllByBusinessId(UUID.fromString(businessId));
+  }
+
+  public List<TwitterAccountEntity> getTwitterAccounts(String businessId) {
+    return accountFacade
+        .getTwitterAccountRepository()
+        .findAllByBusinessId(UUID.fromString(businessId));
   }
 }

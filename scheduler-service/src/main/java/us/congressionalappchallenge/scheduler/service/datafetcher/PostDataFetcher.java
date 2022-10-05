@@ -21,14 +21,6 @@ public class PostDataFetcher {
   private final PostService postService;
   private final ModelMapper modelMapper;
 
-  @DgsQuery
-  @PreAuthorize("isAuthenticated() and #queryFilter.getBusinessId() == authentication.principal.getUid()")
-  public List<FacebookPost> facebookPosts(@InputArgument QueryFilter queryFilter) {
-    return postService.getFacebookPosts(queryFilter).stream()
-        .map(post -> modelMapper.map(post, FacebookPost.class))
-        .collect(Collectors.toList());
-  }
-
   @DgsMutation
   @PreAuthorize("isAuthenticated() and #createFacebookPostInput.getBusinessId() == authentication.principal.getUid()")
   public FacebookPost createFacebookPost(@InputArgument CreateFacebookPostInput createFacebookPostInput) {
@@ -41,5 +33,21 @@ public class PostDataFetcher {
   public InstagramPost createInstagramPost(@InputArgument CreateInstagramPostInput createInstagramPostInput) {
     return modelMapper.map(
         postService.createInstagramPost(createInstagramPostInput), InstagramPost.class);
+  }
+
+  @DgsQuery
+  @PreAuthorize("isAuthenticated() and #queryFilter.getBusinessId() == authentication.principal.getUid()")
+  public List<FacebookPost> facebookPosts(@InputArgument QueryFilter queryFilter) {
+    return postService.getFacebookPosts(queryFilter).stream()
+            .map(post -> modelMapper.map(post, FacebookPost.class))
+            .collect(Collectors.toList());
+  }
+
+  @DgsQuery
+  @PreAuthorize("isAuthenticated() and #queryFilter.getBusinessId() == authentication.principal.getUid()")
+  public List<InstagramPost> instagramPosts(@InputArgument QueryFilter queryFilter) {
+    return postService.getInstagramPosts(queryFilter).stream()
+            .map(post -> modelMapper.map(post, InstagramPost.class))
+            .collect(Collectors.toList());
   }
 }

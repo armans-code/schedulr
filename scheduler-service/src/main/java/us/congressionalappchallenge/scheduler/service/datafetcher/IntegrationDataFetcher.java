@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import us.congressionalappchallenge.scheduler.service.graphql.types.*;
-import us.congressionalappchallenge.scheduler.service.service.OAuthService;
+import us.congressionalappchallenge.scheduler.service.service.IntegrationService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,33 +17,33 @@ import java.util.stream.Collectors;
 @DgsComponent
 @AllArgsConstructor
 @Slf4j
-public class OAuthDataFetcher {
+public class IntegrationDataFetcher {
 
-  private final OAuthService oAuthService;
+  private final IntegrationService integrationService;
   private final ModelMapper modelMapper;
 
   @DgsQuery
   @PreAuthorize("isAuthenticated()")
   public String facebookAuthUrl() {
-    return oAuthService.facebookAuthUrl();
+    return integrationService.facebookAuthUrl();
   }
 
   @DgsQuery
   @PreAuthorize("isAuthenticated()")
   public String instagramAuthUrl() {
-    return oAuthService.instagramAuthUrl();
+    return integrationService.instagramAuthUrl();
   }
 
   @DgsQuery
   @PreAuthorize("isAuthenticated()")
   public String twitterAuthUrl() {
-    return oAuthService.twitterAuthUrl();
+    return integrationService.twitterAuthUrl();
   }
 
   @DgsMutation
   @PreAuthorize("isAuthenticated() and #authorizeFacebookInput.getBusinessId() == authentication.principal.getUid()")
   public List<FacebookAccount> authorizeFacebook(@InputArgument AuthorizeFacebookInput authorizeFacebookInput) {
-    return oAuthService
+    return integrationService
         .authorizeFacebook(authorizeFacebookInput.getBusinessId(), authorizeFacebookInput)
         .stream()
         .map(account -> modelMapper.map(account, FacebookAccount.class))
@@ -53,7 +53,7 @@ public class OAuthDataFetcher {
   @DgsMutation
   @PreAuthorize("isAuthenticated() and #authorizeInstagramInput.getBusinessId() == authentication.principal.getUid()")
   public List<InstagramAccount> authorizeInstagram(@InputArgument AuthorizeInstagramInput authorizeInstagramInput) {
-    return oAuthService
+    return integrationService
         .authorizeInstagram(authorizeInstagramInput.getBusinessId(), authorizeInstagramInput)
         .stream()
         .map(account -> modelMapper.map(account, InstagramAccount.class))
@@ -64,7 +64,31 @@ public class OAuthDataFetcher {
   @PreAuthorize("isAuthenticated() and #authorizeTwitterInput.getBusinessId() == authentication.principal.getUid()")
   public TwitterAccount authorizeTwitter(@InputArgument AuthorizeTwitterInput authorizeTwitterInput) {
     return modelMapper.map(
-        oAuthService.authorizeTwitter(authorizeTwitterInput.getBusinessId(), authorizeTwitterInput),
+        integrationService.authorizeTwitter(authorizeTwitterInput.getBusinessId(), authorizeTwitterInput),
         TwitterAccount.class);
+  }
+
+  @DgsQuery
+  @PreAuthorize("isAuthenticated() and #businessId == authentication.principal.getUid()")
+  public List<FacebookAccount> facebookAccounts(@InputArgument String businessId) {
+    return integrationService.getFacebookAccounts(businessId).stream()
+        .map(account -> modelMapper.map(account, FacebookAccount.class))
+        .collect(Collectors.toList());
+  }
+
+  @DgsQuery
+  @PreAuthorize("isAuthenticated() and #businessId == authentication.principal.getUid()")
+  public List<TwitterAccount> twitterAccounts(@InputArgument String businessId) {
+    return integrationService.getTwitterAccounts(businessId).stream()
+        .map(account -> modelMapper.map(account, TwitterAccount.class))
+        .collect(Collectors.toList());
+  }
+
+  @DgsQuery
+  @PreAuthorize("isAuthenticated() and #businessId == authentication.principal.getUid()")
+  public List<InstagramAccount> instagramAccounts(@InputArgument String businessId) {
+    return integrationService.getInstagramAccounts(businessId).stream()
+        .map(account -> modelMapper.map(account, InstagramAccount.class))
+        .collect(Collectors.toList());
   }
 }

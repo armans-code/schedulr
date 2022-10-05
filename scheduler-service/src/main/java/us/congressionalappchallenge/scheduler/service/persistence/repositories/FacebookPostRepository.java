@@ -12,5 +12,5 @@ import java.util.UUID;
 @Repository
 public interface FacebookPostRepository extends JpaRepository<FacebookPostEntity, UUID> {
   @Query(value = "SELECT * FROM facebook_post WHERE business_id = :businessId AND created_at <= :until AND created_at >= :since", nativeQuery = true)
-  List<FacebookPostEntity> findByBusinessId(UUID businessId, Date since, Date until);
+  List<FacebookPostEntity> findAllByBusinessIdAndSinceAndUntil(UUID businessId, Date since, Date until);
 }

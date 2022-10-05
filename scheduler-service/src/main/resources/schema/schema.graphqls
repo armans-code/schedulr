@@ -1,5 +1,8 @@
 type Query {
     business(businessId: ID!): Business
+    facebookAccounts(businessId: ID!): [FacebookAccount]
+    instagramAccounts(businessId: ID!): [InstagramAccount]
+    twitterAccounts(businessId: ID!): [TwitterAccount]
     facebookPosts(queryFilter: QueryFilter!): [FacebookPost]
     instagramPosts(queryFilter: QueryFilter!): [InstagramPost]
     twitterTweets(queryFilter: QueryFilter!): [TwitterTweet]
