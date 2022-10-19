@@ -7,7 +7,6 @@ import IntegrationCallback from './pages/IntegrationCallback';
 import Login from './pages/Login';
 import NewPost from './pages/NewPost';
 import Register from './pages/Register';
-import YourPosts from './pages/YourPosts';
 
 function App() {
     return (
@@ -35,14 +34,6 @@ function App() {
                 element={
                     <PrivateRoute>
                         <ConnectedApps />
-                    </PrivateRoute>
-                }
-            />
-            <Route
-                path="/your-posts"
-                element={
-                    <PrivateRoute>
-                        <YourPosts />
                     </PrivateRoute>
                 }
             />
