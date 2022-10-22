@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { useAuth } from '../../auth/AuthContext';
 import HeaderLink from './HeaderLink';
 
 function Header() {
+    const { logout } = useAuth();
     const handleClick = async () => {
-        // await logout();
+        await logout();
     };
     return (
         <nav class="bg-white py-2 md:py-4 border">
