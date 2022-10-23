@@ -5,7 +5,7 @@ spring:
     password: scheduler
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
       format_sql: true
     show-sql: true
     properties:
@@ -36,7 +36,8 @@ facebook:
   app-secret: your-app-secret-here
   facebook-permissions: pages_manage_posts,pages_show_list
   instagram-permissions: pages_manage_posts,pages_show_list,instagram_basic,instagram_content_publish
-  callback-url: your-callback-url-here
+  facebook-callback-url: your-facebook-callback-url-here
+  instagram-callback-url: your-instagram-callback-url-here
 
 firebase:
   project-id: your-project-id-here

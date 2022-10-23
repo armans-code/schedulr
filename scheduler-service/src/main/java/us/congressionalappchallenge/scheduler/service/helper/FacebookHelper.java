@@ -21,18 +21,18 @@ public class FacebookHelper {
     return String.format(
         "https://www.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s&scope=%s",
         facebookProperties.getAppId(),
-        facebookProperties.getCallbackUrl(),
+        facebookProperties.getFacebookCallbackUrl(),
         facebookProperties.getFacebookPermissions());
   }
 
-  public String getFacebookAccessToken(String code) {
+  public String getFacebookAccessToken(String code, Boolean instagram) {
     try {
       APIContext context =
           new APIContext("", facebookProperties.getAppSecret(), facebookProperties.getAppId());
       APIRequest<APINode> request = new APIRequest<>(context, "oauth", "/access_token", "GET");
       request.setParam("client_id", facebookProperties.getAppId());
       request.setParam("client_secret", facebookProperties.getAppSecret());
-      request.setParam("redirect_uri", facebookProperties.getCallbackUrl());
+      request.setParam("redirect_uri", instagram ? facebookProperties.getInstagramCallbackUrl() : facebookProperties.getFacebookCallbackUrl());
       request.setParam("code", code);
       APIResponse response = request.execute();
       return response.getRawResponseAsJsonObject().get("access_token").getAsString();

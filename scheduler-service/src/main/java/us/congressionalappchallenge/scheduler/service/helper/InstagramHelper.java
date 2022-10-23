@@ -26,7 +26,7 @@ public class InstagramHelper {
     return String.format(
         "https://www.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s&scope=%s",
         facebookProperties.getAppId(),
-        facebookProperties.getCallbackUrl(),
+        facebookProperties.getInstagramCallbackUrl(),
         facebookProperties.getInstagramPermissions());
   }
 

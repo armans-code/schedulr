@@ -10,7 +10,8 @@ import org.springframework.context.annotation.Configuration;
 public class FacebookProperties {
   private String appId;
   private String appSecret;
-  private String callbackUrl;
+  private String facebookCallbackUrl;
+  private String instagramCallbackUrl;
   private String facebookPermissions;
   private String instagramPermissions;
 }

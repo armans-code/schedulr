@@ -25,8 +25,8 @@ function Login() {
                         Sign in to your account
                     </h2>
                 </div>
-                <div class="flex justify-center self-center">
-                    <div class="px-11 pt-11 pb-8 bg-white mx-auto rounded-2xl w-100 border">
+                <div className="flex justify-center self-center">
+                    <div className="px-11 pt-11 pb-8 bg-white mx-auto rounded-2xl w-100 border">
                         <Formik
                             initialValues={initialValues}
                             onSubmit={async (values) => {
@@ -54,7 +54,7 @@ function Login() {
                                 } = formik;
                                 return (
                                     <form
-                                        class="space-y-5"
+                                        className="space-y-5"
                                         onSubmit={handleSubmit}
                                     >
                                         {error && (
@@ -62,12 +62,12 @@ function Login() {
                                                 {error}
                                             </span>
                                         )}
-                                        <div class="space-y-2">
-                                            <label class="text-sm font-medium text-gray-700 tracking-wide">
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-medium text-gray-700 tracking-wide">
                                                 Email
                                             </label>
                                             <input
-                                                class=" w-full text-base px-4 py-2 border  border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
+                                                className=" w-full text-base px-4 py-2 border  border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
                                                 id="email"
                                                 value={values.email}
                                                 onChange={handleChange}
@@ -75,12 +75,12 @@ function Login() {
                                                 placeholder="john@gmail.com"
                                             />
                                         </div>
-                                        <div class="space-y-2">
-                                            <label class="mb-5 text-sm font-medium text-gray-700 tracking-wide">
+                                        <div className="space-y-2">
+                                            <label className="mb-5 text-sm font-medium text-gray-700 tracking-wide">
                                                 Password
                                             </label>
                                             <input
-                                                class="w-full content-center text-base px-4 py-2 border  border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
+                                                className="w-full content-center text-base px-4 py-2 border  border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
                                                 id="password"
                                                 type="password"
                                                 value={values.password}
@@ -89,17 +89,17 @@ function Login() {
                                                 placeholder="Enter your password"
                                             />
                                         </div>
-                                        <div class="flex items-center justify-between">
-                                            <div class="flex items-center">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center">
                                                 <input
                                                     id="remember_me"
                                                     name="remember_me"
                                                     type="checkbox"
-                                                    class="h-4 w-4 bg-blue-500 focus:ring-blue-400 border-gray-300 rounded"
+                                                    className="h-4 w-4 bg-blue-500 focus:ring-blue-400 border-gray-300 rounded"
                                                 />
                                                 <label
-                                                    for="remember_me"
-                                                    class="ml-2 block text-sm text-gray-800"
+                                                    htmlFor="remember_me"
+                                                    className="ml-2 block text-sm text-gray-800"
                                                 >
                                                     Remember me
                                                 </label>
@@ -108,7 +108,7 @@ function Login() {
                                         <div>
                                             <button
                                                 type="submit"
-                                                class="w-full flex justify-center bg-blue-600 hover:bg-blue-800 text-gray-100 p-3 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-200"
+                                                className="w-full flex justify-center bg-blue-600 hover:bg-blue-800 text-gray-100 p-3 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-200"
                                             >
                                                 Sign in
                                             </button>

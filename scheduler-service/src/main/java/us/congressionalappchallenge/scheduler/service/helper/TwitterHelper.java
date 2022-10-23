@@ -24,6 +24,7 @@ public class TwitterHelper {
 
     public String getAuthUrl() {
         try {
+            twitter.setOAuthAccessToken(null);
             return twitter.getOAuthRequestToken(twitterProperties.getCallbackUrl()).getAuthorizationURL();
         } catch (TwitterException e) {
             throw new RuntimeException("Twitter Error: " + e);

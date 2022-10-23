@@ -27,8 +27,8 @@ public class TwitterConfig {
 
     ConfigurationBuilder cb = new ConfigurationBuilder();
     cb.setDebugEnabled(true)
-        .setOAuthConsumerKey(twitterProperties.getConsumerKey())
-        .setOAuthConsumerSecret(twitterProperties.getConsumerSecret());
+      .setOAuthConsumerKey(twitterProperties.getConsumerKey())
+      .setOAuthConsumerSecret(twitterProperties.getConsumerSecret());
     return new TwitterFactory(cb.build()).getInstance();
   }
 }

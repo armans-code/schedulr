@@ -46,7 +46,7 @@ public class IntegrationService {
   public List<FacebookAccountEntity> authorizeFacebook(
       String businessId, AuthorizeFacebookInput input) {
     BusinessEntity business = accountFacade.findBusinessById(UUID.fromString(businessId));
-    String accessToken = facebookHelper.getFacebookAccessToken(input.getCode());
+    String accessToken = facebookHelper.getFacebookAccessToken(input.getCode(), false);
     APINodeList<Page> pages = facebookHelper.getFacebookAccounts(accessToken);
     return pages.stream()
         .map(page -> accountFacade.saveFacebookAccount(page, business))
@@ -56,7 +56,7 @@ public class IntegrationService {
   public List<InstagramAccountEntity> authorizeInstagram(
       String businessId, AuthorizeInstagramInput input) {
     BusinessEntity business = accountFacade.findBusinessById(UUID.fromString(businessId));
-    String accessToken = facebookHelper.getFacebookAccessToken(input.getCode());
+    String accessToken = facebookHelper.getFacebookAccessToken(input.getCode(), true);
     APINodeList<Page> pages = facebookHelper.getFacebookAccounts(accessToken);
     List<FacebookAccountEntity> storedPages =
         pages.stream()
