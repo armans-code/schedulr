@@ -131,4 +131,13 @@ public class PostService {
             DateUtil.convert(queryFilter.getSince()),
             DateUtil.convert(queryFilter.getUntil()));
   }
+
+  public List<TwitterTweetEntity> getTwitterTweets(QueryFilter queryFilter) {
+    return postFacade
+            .getTwitterTweetRepository()
+            .findAllByBusinessIdAndSinceAndUntil(
+                    UUID.fromString(queryFilter.getBusinessId()),
+                    DateUtil.convert(queryFilter.getSince()),
+                    DateUtil.convert(queryFilter.getUntil()));
+  }
 }

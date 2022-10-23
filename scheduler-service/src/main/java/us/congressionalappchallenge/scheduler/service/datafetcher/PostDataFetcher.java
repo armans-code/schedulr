@@ -24,15 +24,19 @@ public class PostDataFetcher {
   @DgsMutation
   @PreAuthorize("isAuthenticated() and #createFacebookPostInput.getBusinessId() == authentication.principal.getUid()")
   public FacebookPost createFacebookPost(@InputArgument CreateFacebookPostInput createFacebookPostInput) {
-    return modelMapper.map(
-        postService.createFacebookPost(createFacebookPostInput), FacebookPost.class);
+    return modelMapper.map(postService.createFacebookPost(createFacebookPostInput), FacebookPost.class);
   }
 
   @DgsMutation
   @PreAuthorize("isAuthenticated() and #createInstagramPostInput.getBusinessId() == authentication.principal.getUid()")
   public InstagramPost createInstagramPost(@InputArgument CreateInstagramPostInput createInstagramPostInput) {
-    return modelMapper.map(
-        postService.createInstagramPost(createInstagramPostInput), InstagramPost.class);
+    return modelMapper.map(postService.createInstagramPost(createInstagramPostInput), InstagramPost.class);
+  }
+
+  @DgsMutation
+  @PreAuthorize("isAuthenticated() and #createTwitterTweetInput.getBusinessId() == authentication.principal.getUid()")
+  public TwitterTweet createTwitterTweet(@InputArgument CreateTwitterTweetInput createTwitterTweetInput) {
+    return modelMapper.map(postService.createTwitterTweet(createTwitterTweetInput), TwitterTweet.class);
   }
 
   @DgsQuery
@@ -48,6 +52,14 @@ public class PostDataFetcher {
   public List<InstagramPost> instagramPosts(@InputArgument QueryFilter queryFilter) {
     return postService.getInstagramPosts(queryFilter).stream()
             .map(post -> modelMapper.map(post, InstagramPost.class))
+            .collect(Collectors.toList());
+  }
+
+  @DgsQuery
+  @PreAuthorize("isAuthenticated() and #queryFilter.getBusinessId() == authentication.principal.getUid()")
+  public List<TwitterTweet> twitterTweets(@InputArgument QueryFilter queryFilter) {
+    return postService.getTwitterTweets(queryFilter).stream()
+            .map(post -> modelMapper.map(post, TwitterTweet.class))
             .collect(Collectors.toList());
   }
 }
