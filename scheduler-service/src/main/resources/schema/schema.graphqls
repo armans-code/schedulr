@@ -61,7 +61,7 @@ type TwitterTweet {
     text: String
     userId: String
     media: [String]
-    scheduledAt: String
+    scheduledPublishTime: String
 }
 
 type FacebookAccount {
@@ -119,10 +119,10 @@ input CreateInstagramPostInput {
 input CreateTwitterTweetInput {
     businessId: ID
     twitterAccountId: ID
-    text: String
+    message: String
     userId: String
-    media: [String]
-    scheduledAt: String
+    imageUrl: String
+    scheduledPublishTime: String
 }
 
 input AuthorizeFacebookInput {

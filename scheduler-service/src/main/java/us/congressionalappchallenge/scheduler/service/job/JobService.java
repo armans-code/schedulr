@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import us.congressionalappchallenge.scheduler.service.graphql.types.CreateInstagramPostInput;
 import us.congressionalappchallenge.scheduler.service.persistence.entities.InstagramAccountEntity;
 import us.congressionalappchallenge.scheduler.service.persistence.entities.InstagramPostEntity;
+import us.congressionalappchallenge.scheduler.service.persistence.entities.TwitterAccountEntity;
+import us.congressionalappchallenge.scheduler.service.persistence.entities.TwitterTweetEntity;
 import us.congressionalappchallenge.scheduler.service.util.DateUtil;
 
 import java.util.Date;
@@ -28,6 +30,21 @@ public class JobService {
       Trigger trigger = buildTrigger(jobDetail, instagramPost.getScheduledPublishTime());
       Date scheduledDate = schedulerFactory.getScheduler().scheduleJob(jobDetail, trigger);
       log.info("Instagram post with business ID {} scheduled {}", instagramAccount.getBusiness().getId(), scheduledDate);
+    } catch (SchedulerException e) {
+      throw new RuntimeException("Job scheduler error: " + e);
+    }
+  }
+
+  public void scheduleTwitterTweetJob(TwitterAccountEntity twitterAccount, TwitterTweetEntity twitterTweet) {
+    try {
+      JobDataMap dataMap = new JobDataMap();
+      dataMap.put("business-id", twitterAccount.getBusiness().getId());
+      dataMap.put("twitter-account-id", twitterAccount.getId());
+      dataMap.put("twitter-tweet-id", twitterTweet.getId());
+      JobDetail jobDetail = buildJobDetail(dataMap, TwitterTweetJob.class);
+      Trigger trigger = buildTrigger(jobDetail, twitterTweet.getScheduledPublishTime());
+      Date scheduledDate = schedulerFactory.getScheduler().scheduleJob(jobDetail, trigger);
+      log.info("Twitter tweet with business ID {} scheduled {}", twitterAccount.getBusiness().getId(), scheduledDate);
     } catch (SchedulerException e) {
       throw new RuntimeException("Job scheduler error: " + e);
     }

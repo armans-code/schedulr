@@ -4,10 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import twitter4jads.TwitterAds;
-import twitter4jads.TwitterAdsFactory;
-import twitter4jads.conf.ConfigurationBuilder;
-import twitter4jads.internal.models4j.Twitter;
+import twitter4j.Twitter;
+import twitter4j.TwitterFactory;
+import twitter4j.conf.ConfigurationBuilder;
 
 @Configuration
 @AllArgsConstructor
@@ -17,7 +16,7 @@ public class TwitterConfig {
   private final TwitterProperties twitterProperties;
 
   @Bean
-  TwitterAdsFactory twitterAdsFactory() {
+  Twitter twitter() {
     if (twitterProperties.getConsumerKey() == null
         || twitterProperties.getConsumerSecret() == null) {
       log.error(
@@ -30,16 +29,6 @@ public class TwitterConfig {
     cb.setDebugEnabled(true)
         .setOAuthConsumerKey(twitterProperties.getConsumerKey())
         .setOAuthConsumerSecret(twitterProperties.getConsumerSecret());
-    return new TwitterAdsFactory(cb.build());
-  }
-
-  @Bean
-  Twitter twitter() {
-    return twitterAdsFactory().getInstance();
-  }
-
-  @Bean
-  TwitterAds twitterAds() {
-    return twitterAdsFactory().getAdsInstance();
+    return new TwitterFactory(cb.build()).getInstance();
   }
 }

@@ -35,6 +35,7 @@ public class InstagramPostJob extends QuartzJobBean {
         instagramHelper.sendInstagramPost(
             instagramPost.getCaption(), imageUrlOpt, instagramAccount);
     instagramPost.setInstagramId(postId);
+    instagramPost.setScheduled(false);
     postFacade.getInstagramPostRepository().save(instagramPost);
   }
 }

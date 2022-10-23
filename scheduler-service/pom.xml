@@ -67,13 +67,18 @@
             <artifactId>modelmapper</artifactId>
             <version>3.1.0</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.github.sprinklr/twitter4j-ads -->
-        <dependency>
-            <groupId>com.github.sprinklr</groupId>
-            <artifactId>twitter4j-ads</artifactId>
-            <version>5.0</version>
-        </dependency>
+        <!--        https://mvnrepository.com/artifact/com.github.sprinklr/twitter4j-ads &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.github.sprinklr</groupId>-->
+        <!--            <artifactId>twitter4j-ads</artifactId>-->
+        <!--            <version>5.0</version>-->
+        <!--        </dependency>-->
         <!-- https://mvnrepository.com/artifact/org.facebook4j/facebook4j-core -->
+        <dependency>
+            <groupId>org.twitter4j</groupId>
+            <artifactId>twitter4j-stream</artifactId>
+            <version>4.0.6</version>
+        </dependency>
         <dependency>
             <groupId>com.facebook.business.sdk</groupId>
             <artifactId>facebook-java-business-sdk</artifactId>

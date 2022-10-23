@@ -3,11 +3,10 @@ package us.congressionalappchallenge.scheduler.service.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import us.congressionalappchallenge.scheduler.service.graphql.types.CreateFacebookPostInput;
-import us.congressionalappchallenge.scheduler.service.graphql.types.CreateInstagramPostInput;
-import us.congressionalappchallenge.scheduler.service.graphql.types.QueryFilter;
+import us.congressionalappchallenge.scheduler.service.graphql.types.*;
 import us.congressionalappchallenge.scheduler.service.helper.FacebookHelper;
 import us.congressionalappchallenge.scheduler.service.helper.InstagramHelper;
+import us.congressionalappchallenge.scheduler.service.helper.TwitterHelper;
 import us.congressionalappchallenge.scheduler.service.job.JobService;
 import us.congressionalappchallenge.scheduler.service.persistence.entities.*;
 import us.congressionalappchallenge.scheduler.service.persistence.facade.AccountFacade;
@@ -24,6 +23,7 @@ import java.util.UUID;
 public class PostService {
   private final FacebookHelper facebookHelper;
   private final InstagramHelper instagramHelper;
+  private final TwitterHelper twitterHelper;
   private final AccountFacade accountFacade;
   private final PostFacade postFacade;
   private final JobService jobService;
@@ -85,6 +85,32 @@ public class PostService {
           instagramHelper.sendInstagramPost(input.getCaption(), imageUrlOpt, instagramAccount);
       return postFacade.saveInstagramPost(
           business, instagramAccount, input.getCaption(), imageUrlOpt, instagramId);
+    }
+  }
+
+  public TwitterTweetEntity createTwitterTweet(CreateTwitterTweetInput input) {
+    BusinessEntity business =
+            accountFacade.findBusinessById(UUID.fromString(input.getBusinessId()));
+    TwitterAccountEntity twitterAccount =
+            accountFacade.findTwitterAccount(
+                    UUID.fromString(input.getTwitterAccountId()), business.getId());
+    Optional<String> scheduledPublishTimeOpt = Optional.ofNullable(input.getScheduledPublishTime());
+    Optional<String> imageUrlOpt = Optional.ofNullable(input.getImageUrl());
+    if (scheduledPublishTimeOpt.isPresent()) {
+      TwitterTweetEntity postEntity =
+              postFacade.saveTwitterTweet(
+                      business,
+                      twitterAccount,
+                      input.getMessage(),
+                      imageUrlOpt,
+                      DateUtil.convert(scheduledPublishTimeOpt.get()));
+      jobService.scheduleTwitterTweetJob(twitterAccount, postEntity);
+      return postEntity;
+    } else {
+      String twitterId =
+              twitterHelper.sendTwitterTweet(input.getMessage(), imageUrlOpt, twitterAccount);
+      return postFacade.saveTwitterTweet(
+              business, twitterAccount, input.getMessage(), imageUrlOpt, twitterId);
     }
   }
 

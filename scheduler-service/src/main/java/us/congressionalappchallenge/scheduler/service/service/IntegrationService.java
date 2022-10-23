@@ -5,7 +5,7 @@ import com.facebook.ads.sdk.Page;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import twitter4jads.auth.AccessToken;
+import twitter4j.auth.AccessToken;
 import us.congressionalappchallenge.scheduler.service.graphql.types.AuthorizeFacebookInput;
 import us.congressionalappchallenge.scheduler.service.graphql.types.AuthorizeInstagramInput;
 import us.congressionalappchallenge.scheduler.service.graphql.types.AuthorizeTwitterInput;

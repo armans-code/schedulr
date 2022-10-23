@@ -16,4 +16,8 @@ public interface TwitterAccountRepository extends JpaRepository<TwitterAccountEn
 
     @Query(value = "SELECT * FROM twitter_account WHERE twitter_id = :twitterId", nativeQuery = true)
     Optional<TwitterAccountEntity> findByTwitterId(String twitterId);
+
+    @Query(value = "SELECT * FROM twitter_account WHERE id = :twitterId AND business_id: businessId", nativeQuery = true)
+    Optional<TwitterAccountEntity> findByIdAndBusinessId(UUID id, UUID businessId);
+
 }
