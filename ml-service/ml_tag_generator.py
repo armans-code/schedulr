@@ -5,6 +5,7 @@ import random
 # import nltk
 # nltk.download('wordnet')
 # nltk.download('omw-1.4')
+from ProjectDetails import *
 from nltk.corpus import wordnet
 from nltk.tokenize import word_tokenize
 #import nltk
@@ -12,7 +13,6 @@ from nltk.tokenize import word_tokenize
 from collections import defaultdict
 import pprint
 
-#Get API Key from Open AI
 openai.api_key = API_KEY
 
 
@@ -24,6 +24,8 @@ def text_parser_synonym_finder(text: str):
     for token in tokens:
         for syn in wordnet.synsets(token):
             for i in syn.lemmas():
+                # synonyms.append(i.name())
+                # print(f'{token} synonyms are: {i.name()}')
                 synonyms[token].append(i.name())
     #pprint.pprint(dict(synonyms)) #print all synonyms
     #synonym_output = pprint.pformat((dict(synonyms)))
