@@ -14,7 +14,7 @@ export function useAuth() {
 }
 
 function setAccessToken(user) {
-  user.getIdToken().then((token) => sessionStorage.setItem("accessToken", token));
+  user.getIdToken().then((token) => localStorage.setItem("accessToken", token));
 }
 
 export function AuthProvider({ children }) {
@@ -28,7 +28,7 @@ export function AuthProvider({ children }) {
   }
 
   function logout() {
-    return signOut(auth).then(() => sessionStorage.removeItem("accessToken"));
+    return signOut(auth).then(() => localStorage.removeItem("accessToken"));
   }
 
   useEffect(() => {

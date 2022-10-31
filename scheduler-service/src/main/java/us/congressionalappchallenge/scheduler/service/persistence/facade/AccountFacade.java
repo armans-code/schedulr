@@ -1,11 +1,11 @@
 package us.congressionalappchallenge.scheduler.service.persistence.facade;
 
 import com.facebook.ads.sdk.Page;
+import com.github.scribejava.core.model.OAuth2AccessToken;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import twitter4j.auth.AccessToken;
 import us.congressionalappchallenge.scheduler.service.persistence.entities.BusinessEntity;
 import us.congressionalappchallenge.scheduler.service.persistence.entities.FacebookAccountEntity;
 import us.congressionalappchallenge.scheduler.service.persistence.entities.InstagramAccountEntity;
@@ -51,16 +51,15 @@ public class AccountFacade {
     }
 
     public TwitterAccountEntity saveTwitterAccount(
-            BusinessEntity business, AccessToken accessToken, String twitterId, String twitterName) {
-        Optional<TwitterAccountEntity> twitterAccount =
-                twitterAccountRepository.findByTwitterId(((Long) accessToken.getUserId()).toString());
+            BusinessEntity business, OAuth2AccessToken accessToken, String twitterId, String twitterName) {
+        Optional<TwitterAccountEntity> twitterAccount = twitterAccountRepository.findByTwitterId(twitterId);
         if (twitterAccount.isEmpty()) {
             TwitterAccountEntity accountEntity = new TwitterAccountEntity();
             accountEntity.setBusiness(business);
             accountEntity.setTwitterId(twitterId);
             accountEntity.setName(twitterName);
-            accountEntity.setToken(accessToken.getToken());
-            accountEntity.setTokenSecret(accessToken.getTokenSecret());
+            accountEntity.setAccessToken(accessToken.getAccessToken());
+            accountEntity.setRefreshToken(accessToken.getRefreshToken());
             return twitterAccountRepository.save(accountEntity);
         } else {
             return twitterAccount.get();

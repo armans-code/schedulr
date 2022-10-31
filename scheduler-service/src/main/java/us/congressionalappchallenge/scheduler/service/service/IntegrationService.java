@@ -2,10 +2,12 @@ package us.congressionalappchallenge.scheduler.service.service;
 
 import com.facebook.ads.sdk.APINodeList;
 import com.facebook.ads.sdk.Page;
+import com.github.scribejava.core.model.OAuth2AccessToken;
+import com.twitter.clientlib.ApiException;
+import com.twitter.clientlib.model.Get2UsersMeResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import twitter4j.auth.AccessToken;
 import us.congressionalappchallenge.scheduler.service.graphql.types.AuthorizeFacebookInput;
 import us.congressionalappchallenge.scheduler.service.graphql.types.AuthorizeInstagramInput;
 import us.congressionalappchallenge.scheduler.service.graphql.types.AuthorizeTwitterInput;
@@ -19,6 +21,7 @@ import us.congressionalappchallenge.scheduler.service.persistence.entities.Twitt
 import us.congressionalappchallenge.scheduler.service.persistence.facade.AccountFacade;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -31,16 +34,16 @@ public class IntegrationService {
   private final FacebookHelper facebookHelper;
   private final InstagramHelper instagramHelper;
 
-  public String facebookAuthUrl() {
-    return facebookHelper.getFacebookAuthUrl();
+  public String facebookAuth() {
+    return facebookHelper.getFacebookAuth();
   }
 
-  public String instagramAuthUrl() {
-    return instagramHelper.getInstagramAuthUrl();
+  public String instagramAuth() {
+    return instagramHelper.getInstagramAuth();
   }
 
-  public String twitterAuthUrl() {
-    return twitterHelper.getAuthUrl();
+  public Map<String, String> twitterAuth() {
+    return twitterHelper.getTwitterAuth();
   }
 
   public List<FacebookAccountEntity> authorizeFacebook(
@@ -71,13 +74,14 @@ public class IntegrationService {
   }
 
   public TwitterAccountEntity authorizeTwitter(String businessId, AuthorizeTwitterInput input) {
-    BusinessEntity business = accountFacade.findBusinessById(UUID.fromString(businessId));
-    AccessToken accessToken = twitterHelper.getAccessToken(input.getToken(), input.getVerifier());
-    return accountFacade.saveTwitterAccount(
-        business,
-        accessToken,
-        ((Long) accessToken.getUserId()).toString(),
-        accessToken.getScreenName());
+    try {
+      BusinessEntity business = accountFacade.findBusinessById(UUID.fromString(businessId));
+      OAuth2AccessToken accessToken = twitterHelper.getAccessToken(input.getCode(), input.getVerifier());
+      Get2UsersMeResponse user = twitterHelper.twitterApi.users().findMyUser().execute();
+      return accountFacade.saveTwitterAccount(business, accessToken, user.getData().getId(), user.getData().getUsername());
+    } catch (ApiException e) {
+      throw new RuntimeException("Twitter Error: " + e);
+    }
   }
 
   public List<FacebookAccountEntity> getFacebookAccounts(String businessId) {

@@ -8,7 +8,8 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "twitter")
 @Data
 public class TwitterProperties {
-    private String consumerKey;
-    private String consumerSecret;
+    private String clientId;
+    private String clientSecret;
     private String callbackUrl;
+    private String scopes;
 }

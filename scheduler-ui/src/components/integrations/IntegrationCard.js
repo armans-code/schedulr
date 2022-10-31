@@ -5,7 +5,13 @@ function IntegrationAppCard(props) {
   const { name, desc, image, connected, onClick } = props;
 
   function handleClick() {
-    onClick().then((res) => window.open(res.data[Object.keys(res.data)[0]], "_self"));
+    onClick().then((res) => {
+      console.log(res.data.twitterAuthUrl?.verifier != null);
+      if(res.data.twitterAuthUrl?.verifier != null) {
+        localStorage.setItem("twitter_code_verifier", res.data.twitterAuthUrl.verifier);
+      }
+      window.open(res.data[Object.keys(res.data)[0]].url, "_self");
+    })
   }
 
   const buttonClassName = connected

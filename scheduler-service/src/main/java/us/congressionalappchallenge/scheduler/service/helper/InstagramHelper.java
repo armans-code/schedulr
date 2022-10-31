@@ -22,7 +22,7 @@ public class InstagramHelper {
   private final AccountFacade accountFacade;
   private final FacebookProperties facebookProperties;
 
-  public String getInstagramAuthUrl() {
+  public String getInstagramAuth() {
     return String.format(
         "https://www.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s&scope=%s",
         facebookProperties.getAppId(),

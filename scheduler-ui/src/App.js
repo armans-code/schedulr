@@ -28,7 +28,7 @@ const createApolloClient = () => {
   });
 
   const authLink = setContext((_, { headers }) => {
-    const token = sessionStorage.getItem("accessToken");
+    const token = localStorage.getItem("accessToken");
     if (token) {
       return {
         headers: {

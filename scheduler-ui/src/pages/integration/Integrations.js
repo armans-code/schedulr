@@ -82,21 +82,21 @@ function Integrations() {
           name="Twitter"
           desc="Find optimal hashtags and schedule posts for Twitter."
           image="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Twitter-logo.svg/440px-Twitter-logo.svg.png"
-          connected={twitterAccountsData?.twitterAccounts.length !== 0}
+          connected={twitterAccountsData?.twitterAccounts.length > 0}
           onClick={getTwitterAuthUrl}
         />
         <IntegrationCard
           name="Instagram"
           desc="Find optimal hashtags and related terms for Instagram."
           image="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/300px-Instagram_logo_2022.svg.png"
-          connected={instaAccountsData?.instagramAccounts.length !== 0}
+          connected={instaAccountsData?.instagramAccounts.length > 0}
           onClick={getInstaAuthUrl}
         />
         <IntegrationCard
           name="Facebook"
           desc="Find optimal hashtags and schedule posts for Facebook"
           image="https://upload.wikimedia.org/wikipedia/en/thumb/0/04/Facebook_f_logo_%282021%29.svg/300px-Facebook_f_logo_%282021%29.svg.png"
-          connected={fbAccountsData?.facebookAccounts.length !== 0}
+          connected={fbAccountsData?.facebookAccounts.length > 0}
           onClick={getFbAuthUrl}
         />
       </div>

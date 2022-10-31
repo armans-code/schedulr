@@ -17,7 +17,7 @@ public class FacebookHelper {
 
   private final FacebookProperties facebookProperties;
 
-  public String getFacebookAuthUrl() {
+  public String getFacebookAuth() {
     return String.format(
         "https://www.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s&scope=%s",
         facebookProperties.getAppId(),

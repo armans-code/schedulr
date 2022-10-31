@@ -101,16 +101,16 @@ public class PostService {
               postFacade.saveTwitterTweet(
                       business,
                       twitterAccount,
-                      input.getMessage(),
+                      input.getText(),
                       imageUrlOpt,
                       DateUtil.convert(scheduledPublishTimeOpt.get()));
       jobService.scheduleTwitterTweetJob(twitterAccount, postEntity);
       return postEntity;
     } else {
       String twitterId =
-              twitterHelper.sendTwitterTweet(input.getMessage(), imageUrlOpt, twitterAccount);
+              twitterHelper.sendTwitterTweet(input.getText(), imageUrlOpt, twitterAccount);
       return postFacade.saveTwitterTweet(
-              business, twitterAccount, input.getMessage(), imageUrlOpt, twitterId);
+              business, twitterAccount, input.getText(), imageUrlOpt, twitterId);
     }
   }
 

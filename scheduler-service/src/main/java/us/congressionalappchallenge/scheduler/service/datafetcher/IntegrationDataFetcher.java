@@ -12,6 +12,7 @@ import us.congressionalappchallenge.scheduler.service.graphql.types.*;
 import us.congressionalappchallenge.scheduler.service.service.IntegrationService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @DgsComponent
@@ -24,25 +25,28 @@ public class IntegrationDataFetcher {
 
   @DgsQuery
   @PreAuthorize("isAuthenticated()")
-  public String facebookAuthUrl() {
-    return integrationService.facebookAuthUrl();
+  public AuthUrl facebookAuthUrl() {
+    return AuthUrl.newBuilder().url(integrationService.facebookAuth()).build();
   }
 
   @DgsQuery
   @PreAuthorize("isAuthenticated()")
-  public String instagramAuthUrl() {
-    return integrationService.instagramAuthUrl();
+  public AuthUrl instagramAuthUrl() {
+    return AuthUrl.newBuilder().url(integrationService.instagramAuth()).build();
   }
 
   @DgsQuery
   @PreAuthorize("isAuthenticated()")
-  public String twitterAuthUrl() {
-    return integrationService.twitterAuthUrl();
+  public AuthUrl twitterAuthUrl() {
+    Map<String, String> auth = integrationService.twitterAuth();
+    return AuthUrl.newBuilder().url(auth.get("url")).verifier(auth.get("verifier")).build();
   }
 
   @DgsMutation
-  @PreAuthorize("isAuthenticated() and #authorizeFacebookInput.getBusinessId() == authentication.principal.getUid()")
-  public List<FacebookAccount> authorizeFacebook(@InputArgument AuthorizeFacebookInput authorizeFacebookInput) {
+  @PreAuthorize(
+      "isAuthenticated() and #authorizeFacebookInput.getBusinessId() == authentication.principal.getUid()")
+  public List<FacebookAccount> authorizeFacebook(
+      @InputArgument AuthorizeFacebookInput authorizeFacebookInput) {
     return integrationService
         .authorizeFacebook(authorizeFacebookInput.getBusinessId(), authorizeFacebookInput)
         .stream()
@@ -51,8 +55,10 @@ public class IntegrationDataFetcher {
   }
 
   @DgsMutation
-  @PreAuthorize("isAuthenticated() and #authorizeInstagramInput.getBusinessId() == authentication.principal.getUid()")
-  public List<InstagramAccount> authorizeInstagram(@InputArgument AuthorizeInstagramInput authorizeInstagramInput) {
+  @PreAuthorize(
+      "isAuthenticated() and #authorizeInstagramInput.getBusinessId() == authentication.principal.getUid()")
+  public List<InstagramAccount> authorizeInstagram(
+      @InputArgument AuthorizeInstagramInput authorizeInstagramInput) {
     return integrationService
         .authorizeInstagram(authorizeInstagramInput.getBusinessId(), authorizeInstagramInput)
         .stream()
@@ -61,10 +67,13 @@ public class IntegrationDataFetcher {
   }
 
   @DgsMutation
-  @PreAuthorize("isAuthenticated() and #authorizeTwitterInput.getBusinessId() == authentication.principal.getUid()")
-  public TwitterAccount authorizeTwitter(@InputArgument AuthorizeTwitterInput authorizeTwitterInput) {
+  @PreAuthorize(
+      "isAuthenticated() and #authorizeTwitterInput.getBusinessId() == authentication.principal.getUid()")
+  public TwitterAccount authorizeTwitter(
+      @InputArgument AuthorizeTwitterInput authorizeTwitterInput) {
     return modelMapper.map(
-        integrationService.authorizeTwitter(authorizeTwitterInput.getBusinessId(), authorizeTwitterInput),
+        integrationService.authorizeTwitter(
+            authorizeTwitterInput.getBusinessId(), authorizeTwitterInput),
         TwitterAccount.class);
   }
 

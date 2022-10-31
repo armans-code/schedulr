@@ -37,7 +37,7 @@ public class TwitterTweetJob extends QuartzJobBean {
         // TODO handle uploading images
         String tweetId =
                 twitterHelper.sendTwitterTweet(
-                        twitterTweet.getMessage(), imageUrlOpt, twitterAccount);
+                        twitterTweet.getText(), imageUrlOpt, twitterAccount);
         twitterTweet.setTweetId(tweetId);
         twitterTweet.setScheduled(false);
         postFacade.getTwitterTweetRepository().save(twitterTweet);

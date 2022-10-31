@@ -2,19 +2,26 @@ import { gql } from "@apollo/client";
 
 export const FACEBOOK_AUTH_URL = gql`
   query facebookAuthUrl {
-    facebookAuthUrl
+    facebookAuthUrl {
+      url
+    }
   }
 `;
 
 export const INSTAGRAM_AUTH_URL = gql`
   query instagramAuthUrl {
-    instagramAuthUrl
+    instagramAuthUrl {
+      url
+    }
   }
 `;
 
 export const TWITTER_AUTH_URL = gql`
   query twitterAuthUrl {
-    twitterAuthUrl
+    twitterAuthUrl {
+      url
+      verifier
+    }
   }
 `;
 

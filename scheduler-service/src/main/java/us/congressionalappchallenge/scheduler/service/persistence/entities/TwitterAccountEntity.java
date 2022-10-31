@@ -18,9 +18,9 @@ public class TwitterAccountEntity extends BaseEntity {
   @Column(name = "name")
   private String name;
 
-  @Column(name = "token")
-  private String token;
+  @Column(name = "access_token")
+  private String accessToken;
 
-  @Column(name = "token_secret")
-  private String tokenSecret;
+  @Column(name = "refresh_token")
+  private String refreshToken;
 }

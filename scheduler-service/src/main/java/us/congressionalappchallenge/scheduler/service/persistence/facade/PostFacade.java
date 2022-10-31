@@ -97,13 +97,13 @@ public class PostFacade {
   public TwitterTweetEntity saveTwitterTweet(
           BusinessEntity business,
           TwitterAccountEntity twitterAccount,
-          String message,
+          String text,
           Optional<String> imageUrl,
           String twitterId) {
     TwitterTweetEntity postEntity = new TwitterTweetEntity();
     postEntity.setBusiness(business);
     postEntity.setTwitterAccount(twitterAccount);
-    postEntity.setMessage(message);
+    postEntity.setText(text);
     imageUrl.ifPresent(postEntity::setImageUrl);
     postEntity.setTweetId(twitterId);
     postEntity.setScheduled(false);
@@ -113,13 +113,13 @@ public class PostFacade {
   public TwitterTweetEntity saveTwitterTweet(
           BusinessEntity business,
           TwitterAccountEntity twitterAccount,
-          String message,
+          String text,
           Optional<String> imageUrl,
           Date publishedScheduledTime) {
     TwitterTweetEntity postEntity = new TwitterTweetEntity();
     postEntity.setBusiness(business);
     postEntity.setTwitterAccount(twitterAccount);
-    postEntity.setMessage(message);
+    postEntity.setText(text);
     imageUrl.ifPresent(postEntity::setImageUrl);
     postEntity.setScheduledPublishTime(publishedScheduledTime);
     postEntity.setScheduled(true);

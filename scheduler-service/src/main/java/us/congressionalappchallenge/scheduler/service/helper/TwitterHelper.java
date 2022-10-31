@@ -1,54 +1,82 @@
 package us.congressionalappchallenge.scheduler.service.helper;
 
+import com.github.scribejava.core.model.OAuth2AccessToken;
+import com.github.scribejava.core.pkce.PKCE;
+import com.github.scribejava.core.pkce.PKCECodeChallengeMethod;
+import com.twitter.clientlib.ApiException;
+import com.twitter.clientlib.TwitterCredentialsOAuth2;
+import com.twitter.clientlib.api.TwitterApi;
+import com.twitter.clientlib.auth.TwitterOAuth20Service;
+import com.twitter.clientlib.model.TweetCreateRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import twitter4j.StatusUpdate;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.auth.AccessToken;
-import twitter4j.auth.RequestToken;
 import us.congressionalappchallenge.scheduler.service.config.TwitterProperties;
 import us.congressionalappchallenge.scheduler.service.persistence.entities.TwitterAccountEntity;
-import us.congressionalappchallenge.scheduler.service.persistence.facade.AccountFacade;
+import us.congressionalappchallenge.scheduler.service.util.PkceUtil;
 
+import java.io.IOException;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
-@Component
 @AllArgsConstructor
+@Component
 @Slf4j
 public class TwitterHelper {
-    private final Twitter twitter;
-    private final TwitterProperties twitterProperties;
-    private final AccountFacade accountFacade;
+  public final TwitterApi twitterApi;
+  private final TwitterOAuth20Service twitterOauth;
+  private final TwitterProperties twitterProperties;
 
-    public String getAuthUrl() {
-        try {
-            twitter.setOAuthAccessToken(null);
-            return twitter.getOAuthRequestToken(twitterProperties.getCallbackUrl()).getAuthorizationURL();
-        } catch (TwitterException e) {
-            throw new RuntimeException("Twitter Error: " + e);
-        }
+  public Map<String, String> getTwitterAuth() {
+    PKCE pkce = new PKCE();
+    String codeVerifier = PkceUtil.generateCodeVerifier();
+    String codeChallenge = PkceUtil.generateCodeChallenge(codeVerifier);
+    pkce.setCodeChallenge(codeChallenge);
+    pkce.setCodeVerifier(codeVerifier);
+    pkce.setCodeChallengeMethod(PKCECodeChallengeMethod.S256);
+    return Map.of("url", twitterOauth.getAuthorizationUrl(pkce, "state"), "verifier", codeVerifier);
+  }
+
+  public OAuth2AccessToken getAccessToken(String code, String verifier) {
+    try {
+      PKCE pkce = new PKCE();
+      pkce.setCodeChallenge(PkceUtil.generateCodeChallenge(verifier));
+      pkce.setCodeVerifier(verifier);
+      pkce.setCodeChallengeMethod(PKCECodeChallengeMethod.S256);
+      OAuth2AccessToken accessToken = twitterOauth.getAccessToken(pkce, code);
+      twitterApi
+          .getApiClient()
+          .setTwitterCredentials(
+              new TwitterCredentialsOAuth2(
+                  twitterProperties.getClientId(),
+                  twitterProperties.getClientSecret(),
+                  accessToken.getAccessToken(),
+                  accessToken.getRefreshToken()));
+      return accessToken;
+    } catch (IOException | InterruptedException | ExecutionException e) {
+      throw new RuntimeException("Twitter Error: " + e);
     }
+  }
 
-    public AccessToken getAccessToken(String token, String verifier) {
-        try {
-            return twitter.getOAuthAccessToken(new RequestToken(token, ""), verifier);
-        } catch (TwitterException e) {
-            throw new RuntimeException("Twitter Error: " + e);
-        }
+  public String sendTwitterTweet(
+      String text, Optional<String> image, TwitterAccountEntity twitterAccount) {
+    try {
+      twitterApi
+          .getApiClient()
+          .setTwitterCredentials(
+              new TwitterCredentialsOAuth2(
+                  twitterProperties.getClientId(),
+                  twitterProperties.getClientSecret(),
+                  twitterAccount.getAccessToken(),
+                  twitterAccount.getRefreshToken()));
+      TweetCreateRequest tweetCreateRequest = new TweetCreateRequest();
+      tweetCreateRequest.setText(text);
+      // TODO maybe change this return type?
+      return twitterApi.tweets().createTweet(tweetCreateRequest).execute().getData().getId();
+    } catch (ApiException e) {
+      log.error("Post tweet error: ", e);
+      throw new RuntimeException(e);
     }
-
-    public String sendTwitterTweet(String message, Optional<String> image, TwitterAccountEntity twitterAccount) {
-        try {
-            twitter.setOAuthAccessToken(new AccessToken(twitterAccount.getToken(), twitterAccount.getTokenSecret()));
-            StatusUpdate status = new StatusUpdate(message);
-            // TODO maybe change this return type?
-            return ((Long) twitter.updateStatus(status).getId()).toString();
-        } catch (TwitterException e) {
-            log.error("Post tweet error: ", e);
-            throw new RuntimeException(e);
-        }
-    }
-
+  }
 }

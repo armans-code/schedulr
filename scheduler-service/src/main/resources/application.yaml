@@ -27,8 +27,9 @@ spring:
 # DO NOT COMMIT CREDENTIALS, USE ONLY LOCALLY
 
 twitter:
-  consumer-key: your-consumer-key-here
-  consumer-secret: your-consumer-secret-here
+  client-id: your-client-id-here
+  client-secret: your-client-secret-here
+  scopes: offline.access tweet.read tweet.write users.read
   callback-url: your-callback-url-here
 
 facebook:
