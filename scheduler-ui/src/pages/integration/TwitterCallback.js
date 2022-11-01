@@ -1,5 +1,6 @@
 import { useMutation } from "@apollo/client";
 import React, { useEffect, useState } from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 import {
@@ -42,8 +43,8 @@ function TwitterCallback() {
   if (loading) {
     return (
       <div className="w-full h-screen flex flex-col items-center justify-center">
-        <h1 className="text-blue-600 text-6xl font-poppins font-extrabold text-center">
-          Loading...
+        <h1 className="animate-spin text-blue-600 text-6xl font-poppins font-extrabold text-center">
+          <AiOutlineLoading3Quarters />
         </h1>
       </div>
     );

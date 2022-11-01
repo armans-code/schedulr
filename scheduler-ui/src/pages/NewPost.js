@@ -16,10 +16,11 @@ import {
   TWITTER_ACCOUNTS,
 } from "../graphql/queries";
 import { FormControlLabel } from "@mui/material";
-import { AiFillCloseCircle, AiOutlinePlus } from "react-icons/ai";
+import { AiFillCloseCircle, AiOutlineLoading3Quarters, AiOutlinePlus } from "react-icons/ai";
 import { NavLink } from "react-router-dom";
 
 function NewPost() {
+  const [loading, setLoading] = useState(false);
   const [caption, setCaption] = useState("");
   const [radio, setRadio] = useState("now");
   const [meridiem, setMeridiem] = useState("");
@@ -118,10 +119,12 @@ function NewPost() {
   };
 
   const handleSubmit = () => {
+    setLoading(true);
     console.log("hello");
     if (fbCheck) handlePostFacebook();
     if (twtCheck) handlePostTwitter();
     // handlePostInstagram();
+    setLoading(false);
   };
 
   // TODO: improve time input
@@ -161,6 +164,16 @@ function NewPost() {
       console.log(error);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="w-full h-screen flex flex-col items-center justify-center">
+        <h1 className="animate-spin text-blue-600 text-6xl font-poppins font-extrabold text-center">
+          <AiOutlineLoading3Quarters />
+        </h1>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto flex flex-col">

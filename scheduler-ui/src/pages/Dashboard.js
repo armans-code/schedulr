@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import PostCard from "../components/posts/PostCard";
-import { AiOutlinePlus } from "react-icons/ai";
+import { AiOutlineLoading3Quarters, AiOutlinePlus } from "react-icons/ai";
 import { FACEBOOK_POSTS, TWITTER_TWEETS } from "../graphql/queries";
 import { useQuery } from "@apollo/client";
 import { useState } from "react";
@@ -57,8 +57,8 @@ function Dashboard() {
   if (loading) {
     return (
       <div className="w-full h-screen flex flex-col items-center justify-center">
-        <h1 className="text-blue-600 text-6xl font-poppins font-extrabold text-center">
-          Loading...
+        <h1 className="animate-spin text-blue-600 text-6xl font-poppins font-extrabold text-center">
+          <AiOutlineLoading3Quarters />
         </h1>
       </div>
     );
@@ -217,73 +217,6 @@ function Dashboard() {
                 </div>
               </div>
             </div>
-
-            {/* <div className="grid grid-cols-12 gap-6"> */}
-            {/* <div className="mt-10 grid grid-cols-12 gap-6">
-              <Summary title="Created Posts" amount={10} />
-              <Summary title="Scheduled Posts" amount={20} />
-            </div> */}
-            {/* <h1 className="text-3xl font-medium">Scheduled Posts</h1>
-            <div className="flex overflow-x-auto hide-scroll space-x-8 py-8">
-              {fData?.facebookPosts &&
-                fData?.facebookPosts
-                  .filter((post) => post.scheduled)
-                  .map((post) => (
-                    <PostCard
-                      description={post.message}
-                      date={post.updatedAt || post.createdAt}
-                      image={post.link || ""}
-                      facebook
-                    />
-                  ))}
-              {tData?.twitterPosts &&
-                tData?.twitterPosts
-                  .filter((post) => post.scheduled)
-                  .map((post) => (
-                    <PostCard
-                      description={post.message}
-                      date={post.updatedAt || post.createdAt}
-                      image={post.media || ""}
-                      twitter
-                    />
-                  ))}
-            </div>
-          </div>
-          <div>
-            <h1 className="text-3xl font-medium">Past posts</h1>
-            <div className="flex overflow-x-auto hide-scroll space-x-8 py-8">
-              {fData?.facebookPosts &&
-                fData?.facebookPosts
-                  .filter((post) => !post.scheduled)
-                  .map((post) => (
-                    <PostCard
-                      description={post.message}
-                      date={post.updatedAt || post.createdAt}
-                      image={post.link || ""}
-                      facebook
-                    />
-                  ))}
-              {tData?.twitterTweets &&
-                tData?.twitterTweets
-                  .filter((post) => !post.scheduled)
-                  .map((post) => {
-                    console.log(post);
-                    return (
-                      <PostCard
-                        key={post.id}
-                        description={post.message}
-                        date={
-                          post.updatedAt
-                            ? post.updatedAt.split(" ")[0]
-                            : post.createdAt.split(" ")[0]
-                        }
-                        image={post.media || ""}
-                        twitter
-                      />
-                    );
-                  })}
-            </div> */}
-            {/* </div> */}
           </div>
         </div>
       </div>
