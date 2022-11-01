@@ -135,7 +135,7 @@ function NewPost() {
 
   const handleTags = () => {
     axios
-      .get("http://localhost:8000/find-tags", {
+      .get("/find-tags", {
         params: { caption: caption },
       })
       .then((data) => {
