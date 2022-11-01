@@ -1,5 +1,6 @@
 package us.congressionalappchallenge.scheduler.service.job;
 
+import com.twitter.clientlib.model.TweetCreateResponseData;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobDataMap;
@@ -14,7 +15,9 @@ import us.congressionalappchallenge.scheduler.service.persistence.entities.Twitt
 import us.congressionalappchallenge.scheduler.service.persistence.entities.TwitterTweetEntity;
 import us.congressionalappchallenge.scheduler.service.persistence.facade.AccountFacade;
 import us.congressionalappchallenge.scheduler.service.persistence.facade.PostFacade;
+import us.congressionalappchallenge.scheduler.service.util.DateUtil;
 
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,17 +31,17 @@ public class TwitterTweetJob extends QuartzJobBean {
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         JobDataMap dataMap = context.getMergedJobDataMap();
+        Optional<String> imageUrlOpt = Optional.ofNullable((String) dataMap.get("twitter-image-url"));
         TwitterAccountEntity twitterAccount =
                 accountFacade.findTwitterAccount(
                         (UUID) dataMap.get("twitter-account-id"), (UUID) dataMap.get("business-id"));
         TwitterTweetEntity twitterTweet =
                 postFacade.findTwitterTweet((UUID) dataMap.get("twitter-tweet-id"));
-        Optional<String> imageUrlOpt = Optional.ofNullable(twitterTweet.getImageUrl());
         // TODO handle uploading images
-        String tweetId =
+        TweetCreateResponseData tweetRes =
                 twitterHelper.sendTwitterTweet(
-                        twitterTweet.getText(), imageUrlOpt, twitterAccount);
-        twitterTweet.setTweetId(tweetId);
+                        twitterTweet.getMessage(), imageUrlOpt, twitterAccount);
+        twitterTweet.setTweetId(tweetRes.getId());
         twitterTweet.setScheduled(false);
         postFacade.getTwitterTweetRepository().save(twitterTweet);
     }

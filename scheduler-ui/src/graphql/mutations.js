@@ -43,7 +43,7 @@ export const CREATE_TWITTER_POST = gql`
                 name
             }
             twitterId
-            text
+            message
             scheduledPublishTime
             media
         }

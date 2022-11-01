@@ -27,6 +27,8 @@ type Business {
     id: String
     name: String
     email: String
+    createdAt: String
+    updatedAt: String
 }
 
 type FacebookPost {
@@ -38,8 +40,10 @@ type FacebookPost {
     link: String
     place: String
     tags: String
-    published: Boolean
+    scheduled: Boolean
     scheduledPublishTime: String
+    createdAt: String
+    updatedAt: String
 }
 
 type InstagramPost {
@@ -49,8 +53,10 @@ type InstagramPost {
     instagramId: String
     caption: String
     imageUrl: String
-    published: Boolean
+    scheduled: Boolean
     scheduledPublishTime: String
+    createdAt: String
+    updatedAt: String
 }
 
 type TwitterTweet {
@@ -58,15 +64,20 @@ type TwitterTweet {
     business: Business
     twitterAccount: TwitterAccount
     twitterId: String
-    text: String
+    message: String
     media: [String]
+    scheduled: Boolean
     scheduledPublishTime: String
+    createdAt: String
+    updatedAt: String
 }
 
 type FacebookAccount {
     id: ID
     facebookId: String
     name: String
+    createdAt: String
+    updatedAt: String
 }
 
 type InstagramAccount {
@@ -74,6 +85,8 @@ type InstagramAccount {
     instagramId: String
     facebookAccount: FacebookAccount
     name: String
+    createdAt: String
+    updatedAt: String
 }
 
 
@@ -81,6 +94,8 @@ type TwitterAccount {
     id: ID
     twitterId: String
     name: String
+    createdAt: String
+    updatedAt: String
 }
 
 type AuthUrl {
@@ -92,8 +107,8 @@ type AuthUrl {
 
 input QueryFilter {
     businessId: ID
-    since: String
-    until: String
+#    since: String
+#    until: String
 }
 
 input RegisterBusinessInput {
@@ -123,7 +138,7 @@ input CreateInstagramPostInput {
 input CreateTwitterTweetInput {
     businessId: ID
     twitterAccountId: ID
-    text: String
+    message: String
     userId: String
     imageUrl: String
     scheduledPublishTime: String

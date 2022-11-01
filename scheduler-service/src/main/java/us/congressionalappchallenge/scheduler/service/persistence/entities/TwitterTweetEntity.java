@@ -26,8 +26,8 @@ public class TwitterTweetEntity extends BaseEntity {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(name = "text")
-    private String text;
+    @Column(name = "message")
+    private String message;
 
     @Column(name = "scheduled")
     private Boolean scheduled;

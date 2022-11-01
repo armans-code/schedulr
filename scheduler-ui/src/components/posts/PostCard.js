@@ -7,13 +7,15 @@ function PostCard(props) {
     ? "bg-gray-500 hover:bg-gray-600"
     : "bg-blue-700 hover:bg-blue-800";
   return (
-    <div className="min-w-max bg-white rounded-lg border border-gray-200 shadow-md ">
-      <div className="w-80">
-        <img
-          className="rounded-t-lg w-full h-48 object-cover"
-          src={image}
-          alt=""
-        />
+    <div className="w-3/4 bg-white shadow-lg rounded-lg border border-gray-200">
+      <div className="">
+        {image && (
+          <img
+            className="rounded-t-lg w-full h-48 object-cover"
+            src={image}
+            alt=""
+          />
+        )}
         <div className="p-5">
           <p className="mb-3 font-normal">Scheduled for {date}</p>
           <p className="mb-3 font-normal text-gray-700">{description}</p>

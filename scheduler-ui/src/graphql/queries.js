@@ -9,23 +9,6 @@ export const BUSINESS = gql`
     }
 `;
 
-export const FACEBOOK_POSTS = gql`
-    query facebookPosts($QueryFilter: QueryFilter!) {
-        facebookPosts(queryFilter: $QueryFilter) {
-            id
-            scheduledPublishTime
-            published
-            message
-            business {
-                id
-            }
-            facebookAccount {
-                name
-            }
-        }
-    }
-`;
-
 export const FACEBOOK_AUTH_URL = gql`
     query facebookAuthUrl {
         facebookAuthUrl {
@@ -84,4 +67,47 @@ export const TWITTER_ACCOUNTS = gql`
             name
         }
     }
+`;
+
+export const FACEBOOK_POSTS = gql`
+  query facebookPosts($queryFilter: QueryFilter!) {
+    facebookPosts(queryFilter: $queryFilter) {
+      id
+      message
+      tags
+      link
+      scheduled
+      scheduledPublishTime
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const TWITTER_TWEETS = gql`
+  query twitterTweets($queryFilter: QueryFilter!) {
+    twitterTweets(queryFilter: $queryFilter) {
+      id
+      message
+      media
+      scheduled
+      scheduledPublishTime
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const INSTAGRAM_POSTS = gql`
+  query instagramPosts($queryFilter: QueryFilter!) {
+    instagramPosts(queryFilter: $queryFilter) {
+      id
+      caption
+      imageUrl
+      scheduled
+      scheduledPublishTime
+      createdAt
+      updatedAt
+    }
+  }
 `;

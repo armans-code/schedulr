@@ -103,7 +103,7 @@ public class PostFacade {
     TwitterTweetEntity postEntity = new TwitterTweetEntity();
     postEntity.setBusiness(business);
     postEntity.setTwitterAccount(twitterAccount);
-    postEntity.setText(text);
+    postEntity.setMessage(text);
     imageUrl.ifPresent(postEntity::setImageUrl);
     postEntity.setTweetId(twitterId);
     postEntity.setScheduled(false);
@@ -119,7 +119,7 @@ public class PostFacade {
     TwitterTweetEntity postEntity = new TwitterTweetEntity();
     postEntity.setBusiness(business);
     postEntity.setTwitterAccount(twitterAccount);
-    postEntity.setText(text);
+    postEntity.setMessage(text);
     imageUrl.ifPresent(postEntity::setImageUrl);
     postEntity.setScheduledPublishTime(publishedScheduledTime);
     postEntity.setScheduled(true);

@@ -1,5 +1,5 @@
 import { React } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import {
   ApolloProvider,
@@ -67,6 +67,7 @@ function App() {
               </PrivateRoute>
             }
           />
+          <Route path="/" element={<Navigate replace to="/dashboard" />} />
           <Route
             path="/dashboard"
             element={

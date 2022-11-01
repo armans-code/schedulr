@@ -1,5 +1,7 @@
 package us.congressionalappchallenge.scheduler.service.service;
 
+import com.twitter.clientlib.model.TweetCreateResponse;
+import com.twitter.clientlib.model.TweetCreateResponseData;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -101,43 +103,37 @@ public class PostService {
               postFacade.saveTwitterTweet(
                       business,
                       twitterAccount,
-                      input.getText(),
+                      input.getMessage(),
                       imageUrlOpt,
                       DateUtil.convert(scheduledPublishTimeOpt.get()));
       jobService.scheduleTwitterTweetJob(twitterAccount, postEntity);
       return postEntity;
     } else {
-      String twitterId =
-              twitterHelper.sendTwitterTweet(input.getText(), imageUrlOpt, twitterAccount);
+      TweetCreateResponseData twitterRes =
+              twitterHelper.sendTwitterTweet(input.getMessage(), imageUrlOpt, twitterAccount);
       return postFacade.saveTwitterTweet(
-              business, twitterAccount, input.getText(), imageUrlOpt, twitterId);
+              business, twitterAccount, input.getMessage(), imageUrlOpt, twitterRes.getId());
     }
   }
 
   public List<FacebookPostEntity> getFacebookPosts(QueryFilter queryFilter) {
     return postFacade
         .getFacebookPostRepository()
-        .findAllByBusinessIdAndSinceAndUntil(
-            UUID.fromString(queryFilter.getBusinessId()),
-            DateUtil.convert(queryFilter.getSince()),
-            DateUtil.convert(queryFilter.getUntil()));
+        .findAllByBusinessId(
+            UUID.fromString(queryFilter.getBusinessId()));
   }
 
   public List<InstagramPostEntity> getInstagramPosts(QueryFilter queryFilter) {
     return postFacade
         .getInstagramPostRepository()
-        .findAllByBusinessIdAndSinceAndUntil(
-            UUID.fromString(queryFilter.getBusinessId()),
-            DateUtil.convert(queryFilter.getSince()),
-            DateUtil.convert(queryFilter.getUntil()));
+        .findAllByBusinessId(
+            UUID.fromString(queryFilter.getBusinessId()));
   }
 
   public List<TwitterTweetEntity> getTwitterTweets(QueryFilter queryFilter) {
     return postFacade
             .getTwitterTweetRepository()
-            .findAllByBusinessIdAndSinceAndUntil(
-                    UUID.fromString(queryFilter.getBusinessId()),
-                    DateUtil.convert(queryFilter.getSince()),
-                    DateUtil.convert(queryFilter.getUntil()));
+            .findAllByBusinessId(
+                    UUID.fromString(queryFilter.getBusinessId()));
   }
 }

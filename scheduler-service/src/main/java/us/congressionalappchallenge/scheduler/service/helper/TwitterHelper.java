@@ -7,7 +7,10 @@ import com.twitter.clientlib.ApiException;
 import com.twitter.clientlib.TwitterCredentialsOAuth2;
 import com.twitter.clientlib.api.TwitterApi;
 import com.twitter.clientlib.auth.TwitterOAuth20Service;
+import com.twitter.clientlib.model.Tweet;
 import com.twitter.clientlib.model.TweetCreateRequest;
+import com.twitter.clientlib.model.TweetCreateResponse;
+import com.twitter.clientlib.model.TweetCreateResponseData;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -59,7 +62,7 @@ public class TwitterHelper {
     }
   }
 
-  public String sendTwitterTweet(
+  public TweetCreateResponseData sendTwitterTweet(
       String text, Optional<String> image, TwitterAccountEntity twitterAccount) {
     try {
       twitterApi
@@ -73,7 +76,7 @@ public class TwitterHelper {
       TweetCreateRequest tweetCreateRequest = new TweetCreateRequest();
       tweetCreateRequest.setText(text);
       // TODO maybe change this return type?
-      return twitterApi.tweets().createTweet(tweetCreateRequest).execute().getData().getId();
+      return twitterApi.tweets().createTweet(tweetCreateRequest).execute().getData();
     } catch (ApiException e) {
       log.error("Post tweet error: ", e);
       throw new RuntimeException(e);

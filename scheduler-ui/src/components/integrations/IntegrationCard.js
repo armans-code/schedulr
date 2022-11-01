@@ -19,13 +19,15 @@ function IntegrationAppCard(props) {
     : "border bg-white hover:bg-gray-100 text-gray-600 duration-200 rounded-lg px-2 py-1";
 
   return (
-    <div className="flex flex-col gap-2 border p-4 rounded-lg w-72 shadow">
+    <div className="flex flex-col gap-2 p-4 w-72 bg-white shadow-lg rounded-lg border border-gray-200">
       <div className="w-full flex items-center justify-between">
         <div className="w-14">
           <img className="w-full h-full" src={image} alt={desc} />
         </div>
         {connected ? (
-          <button className={buttonClassName} disabled>Connected</button>
+          <button className={buttonClassName} disabled>
+            Connected
+          </button>
         ) : (
           <button className={buttonClassName} onClick={handleClick}>
             Connect
