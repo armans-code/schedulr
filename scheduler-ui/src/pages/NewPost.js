@@ -4,6 +4,7 @@ import { useAuth } from "../auth/AuthContext";
 import Emoji from "../components/new-post/Emoji";
 import Hashtag from "../components/new-post/Hashtag";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import Checkbox from "@mui/material/Checkbox";
 import {
   CREATE_FACEBOOK_POST,
@@ -20,6 +21,7 @@ import { AiFillCloseCircle, AiOutlineLoading3Quarters, AiOutlinePlus } from "rea
 import { NavLink } from "react-router-dom";
 
 function NewPost() {
+  let navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [caption, setCaption] = useState("");
   const [radio, setRadio] = useState("now");
@@ -120,10 +122,9 @@ function NewPost() {
 
   const handleSubmit = () => {
     setLoading(true);
-    console.log("hello");
-    if (fbCheck) handlePostFacebook();
-    if (twtCheck) handlePostTwitter();
-    // handlePostInstagram();
+    // if (fbCheck) handlePostFacebook();
+    // if (twtCheck) handlePostTwitter();
+    navigate('/dashboard');
     setLoading(false);
   };
 

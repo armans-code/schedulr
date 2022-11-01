@@ -107,6 +107,19 @@ function Dashboard() {
                   </div>
                 </div>
                 <div className="flex flex-col gap-5 pt-5 items-center">
+                  {fData?.facebookPosts &&
+                    fData?.facebookPosts.map((post) => (
+                      <PostCard
+                        description={post.message}
+                        date={
+                          post.updatedAt
+                            ? post.updatedAt.split(" ")[0]
+                            : post.createdAt.split(" ")[0]
+                        }
+                        image={post.link || ""}
+                        past={!post.scheduled}
+                      />
+                    ))}
                   <PostCard
                     description="Here are the biggest enterprise technology acquisitions
 				            of 2021 so far, in reverse chronological order."
@@ -148,6 +161,19 @@ function Dashboard() {
                   </div>
                 </div>
                 <div className="flex flex-col gap-5 pt-5 items-center">
+                  {tData?.twitterTweets &&
+                    tData?.twitterTweets.map((post) => (
+                      <PostCard
+                        description={post.message}
+                        date={
+                          post.updatedAt
+                            ? post.updatedAt.split(" ")[0]
+                            : post.createdAt.split(" ")[0]
+                        }
+                        image={post.link || ""}
+                        past={!post.scheduled}
+                      />
+                    ))}
                   <PostCard
                     description="Here are the biggest enterprise technology acquisitions
 				              of 2021 so far, in reverse chronological order."
@@ -217,6 +243,72 @@ function Dashboard() {
                 </div>
               </div>
             </div>
+
+            {/* <div className="grid grid-cols-12 gap-6"> */}
+            {/* <div className="mt-10 grid grid-cols-12 gap-6">
+              <Summary title="Created Posts" amount={10} />
+              <Summary title="Scheduled Posts" amount={20} />
+            </div> */}
+            {/* <h1 className="text-3xl font-medium">Scheduled Posts</h1>
+            <div className="flex overflow-x-auto hide-scroll space-x-8 py-8">
+              {fData?.facebookPosts &&
+                fData?.facebookPosts
+                  .filter((post) => post.scheduled)
+                  .map((post) => (
+                    <PostCard
+                      description={post.message}
+                      date={post.updatedAt || post.createdAt}
+                      image={post.link || ""}
+                    />
+                  ))}
+              {tData?.twitterPosts &&
+                tData?.twitterPosts
+                  .filter((post) => post.scheduled)
+                  .map((post) => (
+                    <PostCard
+                      description={post.message}
+                      date={post.updatedAt || post.createdAt}
+                      image={post.media || ""}
+                      twitter
+                    />
+                  ))}
+            </div>
+          </div>
+          <div>
+            <h1 className="text-3xl font-medium">Past posts</h1>
+            <div className="flex overflow-x-auto hide-scroll space-x-8 py-8">
+              {fData?.facebookPosts &&
+                fData?.facebookPosts
+                  .filter((post) => !post.scheduled)
+                  .map((post) => (
+                    <PostCard
+                      description={post.message}
+                      date={post.updatedAt || post.createdAt}
+                      image={post.link || ""}
+                      facebook
+                    />
+                  ))}
+              {tData?.twitterTweets &&
+                tData?.twitterTweets
+                  .filter((post) => !post.scheduled)
+                  .map((post) => {
+                    console.log(post);
+                    return (
+                      <PostCard
+                        key={post.id}
+                        description={post.message}
+                        date={
+                          post.updatedAt
+                            ? post.updatedAt.split(" ")[0]
+                            : post.createdAt.split(" ")[0]
+                        }
+                        image={post.media || ""}
+                        twitter
+                      />
+                    );
+                  })}
+            </div> */}
+            {/* </div> */}
           </div>
         </div>
       </div>

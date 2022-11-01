@@ -17,7 +17,9 @@ function PostCard(props) {
           />
         )}
         <div className="p-5">
-          <p className="mb-3 font-normal">Scheduled for {date}</p>
+          <p className="mb-3 font-normal">
+            {past ? <p>Published At {date}</p> : <p> Scheduled For {date}</p>}
+          </p>
           <p className="mb-3 font-normal text-gray-700">{description}</p>
           <div className="flex items-center justify-between">
             <div className="flex gap-3">
